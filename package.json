@@ -1,0 +1,25 @@
+{
+  "name": "bootcamp-api",
+  "version": "0.1.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "serverless offline start --stage local --region us-east-2 --reloadHandler --noPrependStageInUrl",
+    "serverless": "serverless",
+    "ddb": "set DYNAMO_ENDPOINT=http://localhost:4000 && dynamodb-admin"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.575.0",
+    "@aws-sdk/util-dynamodb": "^3.575.0",
+    "jsonwebtoken": "^9.0.2",
+    "serverless": "^3.38.0",
+    "serverless-dynamodb": "^0.2.53",
+    "serverless-esbuild": "^1.52.1",
+    "serverless-offline": "^13.5.0"
+  },
+  "devDependencies": {
+    "dynamodb-admin": "^4.6.1"
+  }
+}

@@ -1,0 +1,24 @@
+[
+    {
+        "firstName": "Alex",
+        "lastName": "Gutierrez",
+        "phoneNumber": "3313392031",
+        "email": "j.alex1410@hotmail.com",
+        "password": "NuevoMundo",
+        "balance": 0,
+        "transactions": [],
+        "contacts": ["test@test.com"],
+        "userType": "CLIENT"
+    },
+    {
+        "firstName": "John",
+        "lastName": "Doe",
+        "phoneNumber": "3316364335",
+        "email": "test@test.com",
+        "password": "NuevoMundo",
+        "balance": 0,
+        "transactions": [],
+        "contacts": [],
+        "userType": "CLIENT"
+    }
+]

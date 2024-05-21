@@ -1,0 +1,135 @@
+service: bootcamp-bank-api
+
+plugins: 
+  - serverless-esbuild
+  - serverless-offline
+  - serverless-dynamodb
+
+package:
+  excludeDevDependencies: true
+  individually: true
+
+provider: 
+  name: aws
+  runtime: nodejs18.x
+  region: ${opt:region, "us-east-2"}
+  stage: ${opt:stage, "local"}
+  timeout: 30
+  environment:
+    STAGE: ${self:provider.stage}
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action: 
+            - dynamodb:Query
+            - dynamodb:Scan
+            - dynamodb:GetItem
+            - dynamodb:PutItem
+            - dynamodb:UpdateItem
+            - dynamodb:DeleteItem
+            - dynamodb:BatchGetItem
+            - dynamodb:BatchWriteItem
+          Resource: 'arn:aws:dynamodb:us-east-2:*:*'
+        - Effect: Allow
+          Action: 
+            - s3:GetObject
+            - s3:PutObject
+          Resource: '*'
+  apiGateway:
+    restApiId: !Ref MainApi
+    restApiRootResourceId: !GetAtt MainApi.RootResourceId
+
+custom:
+  service: ${self:service}
+  base: ${self:service}-${self:provider.stage}
+  dynamodb:
+    stages:
+      - local
+    start: 
+      port: 4000
+      inMemory: true
+      migrate: true
+      seed: true
+    seed:
+      tables:
+        sources:
+          - table: ${self:provider.stage}-${self:service}-users
+            sources: [./src/seeds/users.json]
+  esbuild:
+    bundle: true
+    minify: true
+    exclude: ['aws-sdk']
+    target: node20
+    concurrency: 10
+    watch:
+      pattern: ['src/**/*.ts']
+  serverless-offline:
+    useChildProcesses: true
+
+resources:
+  - '${file(./aws/dynamodb.yaml)}'
+  - '${file(./aws/apigateway.yaml)}'
+
+functions:
+  login:
+      name: ${self:custom.base}-login
+      description: 'login function'
+      handler: src/handlers/login.handler
+      timeout: 30
+      memorySize: 264
+      environment: 
+        TOKEN_SECRET: 'DASDNMASNDA'
+      package:
+        patterns:
+          - '!src/**'
+          - 'src/handlers/login.*'
+          - 'src/constants.*'
+          - 'src/dynamodb/*'
+          - 'src/helpers/**/*'
+      events:
+        - http:
+            path: /login
+            method: post
+            cors: true
+  transaction:
+      name: ${self:custom.base}-transaction
+      description: 'transaction function'
+      handler: src/handlers/transaction.handler
+      timeout: 30
+      memorySize: 264
+      environment: 
+        TOKEN_SECRET: 'DASDNMASNDA'
+      package:
+        patterns:
+          - '!src/**'
+          - 'src/handlers/transaction.*'
+          - 'src/constants.*'
+          - 'src/dynamodb/*'
+          - 'src/helpers/**/*'
+      events:
+        - http:
+            path: /transaction
+            method: post
+            cors: true
+  accountSummary:
+      name: ${self:custom.base}-accountSummary
+      description: 'accountSummary function'
+      handler: src/handlers/accountSummary.handler
+      timeout: 30
+      memorySize: 264
+      environment: 
+        TOKEN_SECRET: 'DASDNMASNDA'
+      package:
+        patterns:
+          - '!src/**'
+          - 'src/handlers/accountSummary.*'
+          - 'src/constants.*'
+          - 'src/dynamodb/*'
+          - 'src/helpers/**/*'
+      events:
+        - http:
+            path: /accountSummary
+            method: get
+            cors: true
+  
