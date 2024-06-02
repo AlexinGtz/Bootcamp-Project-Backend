@@ -1,43 +1,47 @@
 // POST
-import * as jwt from 'jsonwebtoken';
+import * as tokenGen from 'jsonwebtoken';
 import { CustomDynamoDB } from "../dynamodb/database";
-import responseHelper from "../helpers/responseHelper"
-import { validatePassword } from "../helpers/validations";
-import { DAY_IN_S } from "../helpers/constants"
+import responseHelper from "../helpers/responseHelper";
+import { validateEmail, validatePassword } from "../helpers/validations";
 
-const usersDB = new CustomDynamoDB('local-bootcamp-bank-api-users', 'email');
+const userDB = new CustomDynamoDB('local-bootcamp-classroom-api-users', 'email')
 
-export const handler = async (event: any) => {
+  
+export const handler = async(event: any) => {
     const body = JSON.parse(event.body);
 
     const {
-        email,
-        password
+        userEmail, 
+        userPassword
     } = body;
-
-    if (!email || email.trim() === '') {
-        return responseHelper(400, 'Email or password not provided');
+    
+    if(!userEmail || userEmail.trim()==='') {
+            return responseHelper(400, 'Email not provided')
     }
 
-    const user = await usersDB.getItem(email);
+    const emailVerified = validateEmail(userEmail)
 
-    if (!user) {
-        return responseHelper(404, 'User Not Found');
+    if(!emailVerified) {
+        return responseHelper(404, 'Email not verified')     
     }
 
-    const passwordsMatch = validatePassword(user.password, password);
+    const user = await userDB.getItem(userEmail);
 
-    if (!passwordsMatch) {
-        return responseHelper(400, 'Passwords don\'t match');
+    if(!user) {
+        return responseHelper(400, 'User not found')
     }
+    
+    const passwordMatch = validatePassword(user.password, userPassword)
 
-    console.log('SECRET', process.env.TOKEN_SECRET);
+    if(!passwordMatch) {
+        return responseHelper(400, 'Passwords do not match')
+    }
+    
 
-    const token = jwt.sign(
+    const token = tokenGen.sign(
         {
-            email,
-            firstName: user.firstName,
-            lastName: user.lastName
+            userType: user.userType,
+            userEmail
         },
         process.env.TOKEN_SECRET,
         {
@@ -45,11 +49,11 @@ export const handler = async (event: any) => {
         }
     );
 
-
     return responseHelper(200, 'Success', {
+        accessToken: token,
         userType: user.userType,
         email: user.email,
-        token: token,
-        expiresIn: DAY_IN_S
-    });
+        firstName: user.firstName,
+        lastName: user.lastName
+    })
 }
