@@ -1,17 +1,6 @@
 import { validateEmail, validatePassword } from "../../helpers/validations"
 import * as userMock from "../mocks/users.json"
 
-jest.mock('../../helpers/validations',() => {
-    return({
-        validatePassword: jest.fn((userDBPassword, userProvidedPasword) => {
-            return ((userMock.find((user) => user.password === userDBPassword).password === userProvidedPasword))                             
-        }),
-        validateEmail: jest.fn((userProvidedEmail) => {
-            return (/^\w+([.-_+]?\w+)*@\w+([.-]?\w+)*(\.\w{2,10})+$/.test(userProvidedEmail))                             
-        })
-    })
-})
-
 describe("Validations", () => {
   
     describe("User password validate function", () => {
@@ -34,7 +23,7 @@ describe("Validations", () => {
     describe("User email validate function", () => {
     
         describe("Fail test", () => {
-            it("Should fail when user email is not verified", () => {
+            it("Should fail when user email format is not valid", () => {
                 const response = validateEmail("not.valid.email")
                 expect(response).toEqual(false);
             })

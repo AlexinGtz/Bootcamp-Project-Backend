@@ -22,7 +22,7 @@ export const handler = async(event: any) => {
     const emailVerified = validateEmail(userEmail)
 
     if(!emailVerified) {
-        return responseHelper(404, 'Email not verified')     
+        return responseHelper(404, 'Email format not valid')     
     }
 
     const user = await userDB.getItem(userEmail);
