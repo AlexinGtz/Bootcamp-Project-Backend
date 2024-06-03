@@ -4,9 +4,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "test": "jest --coverage --verbose",
     "start": "serverless offline start --stage local --region us-east-2 --reloadHandler --noPrependStageInUrl",
     "serverless": "serverless",
-    "ddb": "set DYNAMO_ENDPOINT=http://localhost:4000 && dynamodb-admin"
+    "ddb": "set DYNAMO_ENDPOINT=http://localhost:4000 && dynamodb-admin",
+    "ddb-l": "DYNAMO_ENDPOINT=http://127.0.0.1:4000 dynamodb-admin"
   },
   "author": "",
   "license": "ISC",
@@ -20,6 +22,10 @@
     "serverless-offline": "^13.5.0"
   },
   "devDependencies": {
-    "dynamodb-admin": "^4.6.1"
+    "@types/jest": "^29.5.12",
+    "dynamodb-admin": "^4.6.1",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.1.4",
+    "ts-node": "^10.9.2"
   }
 }

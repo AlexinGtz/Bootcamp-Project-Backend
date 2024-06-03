@@ -1,4 +1,4 @@
-service: bootcamp-bank-api
+service: bootcamp-classroom-api
 
 plugins: 
   - serverless-esbuild
@@ -78,8 +78,8 @@ functions:
       handler: src/handlers/login.handler
       timeout: 30
       memorySize: 264
-      environment: 
-        TOKEN_SECRET: 'DASDNMASNDA'
+      environment:
+        TOKEN_SECRET: 'PARANGARICUTIRIMICUARO'
       package:
         patterns:
           - '!src/**'
@@ -92,44 +92,3 @@ functions:
             path: /login
             method: post
             cors: true
-  transaction:
-      name: ${self:custom.base}-transaction
-      description: 'transaction function'
-      handler: src/handlers/transaction.handler
-      timeout: 30
-      memorySize: 264
-      environment: 
-        TOKEN_SECRET: 'DASDNMASNDA'
-      package:
-        patterns:
-          - '!src/**'
-          - 'src/handlers/transaction.*'
-          - 'src/constants.*'
-          - 'src/dynamodb/*'
-          - 'src/helpers/**/*'
-      events:
-        - http:
-            path: /transaction
-            method: post
-            cors: true
-  accountSummary:
-      name: ${self:custom.base}-accountSummary
-      description: 'accountSummary function'
-      handler: src/handlers/accountSummary.handler
-      timeout: 30
-      memorySize: 264
-      environment: 
-        TOKEN_SECRET: 'DASDNMASNDA'
-      package:
-        patterns:
-          - '!src/**'
-          - 'src/handlers/accountSummary.*'
-          - 'src/constants.*'
-          - 'src/dynamodb/*'
-          - 'src/helpers/**/*'
-      events:
-        - http:
-            path: /accountSummary
-            method: get
-            cors: true
-  
