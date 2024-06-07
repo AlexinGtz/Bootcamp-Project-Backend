@@ -92,3 +92,23 @@ functions:
             path: /login
             method: post
             cors: true
+  addStudent:
+    name: ${self:custom.base}-addStudent
+    description: 'addStudent function'
+    handler: src/handlers/addStudent.handler
+    timeout: 30
+    memorySize: 264
+    environment:
+        TOKEN_SECRET: 'PARANGARICUTIRIMICUARO'
+    package:
+      patterns:
+        - '!src/**'
+        - 'src/handlers/addStudent.*'
+        - 'src/constants.*'
+        - 'src/dynamodb/*'
+        - 'src/helpers/**/*'
+    events:
+      - http:
+          path: /addStudent
+          method: post
+          cors: true
