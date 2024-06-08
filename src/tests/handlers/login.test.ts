@@ -24,6 +24,7 @@ jest.mock('jsonwebtoken',() => {
     })
 })
 
+
 jest.mock('../../helpers/validations',() => {
     return({
         validatePassword: jest.fn((userDBPassword, userProvidedPasword) => {
@@ -137,8 +138,8 @@ describe("Login handler", () => {
         it("Should succeed when the userType is a TEACHER", async () => {    
             const response = await handler({
                 body: JSON.stringify({
-                    userEmail: userMock[1].email,
-                    userPassword: userMock[1].password
+                    userEmail: userMock[2].email,
+                    userPassword: userMock[2].password
                 })
             });
         

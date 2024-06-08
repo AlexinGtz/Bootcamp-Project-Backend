@@ -1,0 +1,34 @@
+[
+    {
+        "id": "S1",
+        "teacherEmail": "pedro@pe.com",
+        "name": "Spanish",
+        "description": "Some Spanish",
+        "students": [{   
+                        "firstName": "Luis",
+                        "lastName": "Urias",
+                        "email": "luiginini@gmail.com"
+                     },
+                     {                      
+                        "firstName": "Tutti",
+                        "lastName": "Da Capo",
+                        "email": "tutti@gmail.com"
+                    }]
+    }, 
+    {
+        "id": "S2",
+        "teacherEmail": "chipi@chapa.com",
+        "name": "English I",
+        "description": "Some English",
+        "students": [{                      
+                        "firstName": "Tutti",
+                        "lastName": "Da Capo",
+                        "email": "tutti@gmail.com"
+                    },
+                    {   
+                        "firstName": "Luis",
+                        "lastName": "Urias",
+                        "email": "luiginini@gmail.com"
+                    }] 
+    }
+]
