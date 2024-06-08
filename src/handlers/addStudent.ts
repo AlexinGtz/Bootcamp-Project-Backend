@@ -10,22 +10,28 @@ export const handler = async(event: any) => {
     //Validate Token
     const tokenData = await validateToken(event.headers.Authorization);
     if (!tokenData) {
-        return responseHelper(HTTP_CODES.FORBIDDEN, "Authentication Failed");
-        
+        return responseHelper(HTTP_CODES.FORBIDDEN, "Authentication Failed"); 
     }
 
     if (tokenData.userType !== USER_TYPES.TEACHER) {
         return responseHelper(HTTP_CODES.UNAUTHORIZED, "You are not authorized to perform this action.");
     }
 
+    
     const body = JSON.parse(event.body);
-
+    
     const {
         firstName,
         lastName,
         email,
         age
-    } = body
+        } = body
+
+    const user = await usersDB.getItem(email);
+
+    if( user ){
+        return responseHelper(HTTP_CODES.FORBIDDEN, "Email already registered on the system.")
+    }
 
     if (!email || email.trim() === ''){
         return responseHelper(HTTP_CODES.BAD_REQUEST, "Student email not provided.")
@@ -48,12 +54,13 @@ export const handler = async(event: any) => {
     const newPassword = Math.random().toString(36).slice(-8)
 
     const newAge = parseInt(age)
+    
 
     try{
         await usersDB.putItem({
-            firstName,
-            lastName,
-            email,
+            firstName: firstName.trim(),
+            lastName: lastName.trim(),
+            email: email.trim(),
             password: newPassword,
             age: newAge,
             subjects: [],
