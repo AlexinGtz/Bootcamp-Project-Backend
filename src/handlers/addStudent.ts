@@ -36,7 +36,7 @@ export const handler = async(event: any) => {
     if (!lastName || lastName.trim() === ''){
         return responseHelper(HTTP_CODES.BAD_REQUEST, "Student Last name not provided.")
     }
-    if (!age || age.trim() === ''){
+    if (age === ''){
         return responseHelper(HTTP_CODES.BAD_REQUEST, "Student age not provided.")
     }
     
