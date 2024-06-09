@@ -118,3 +118,23 @@ functions:
             path: /homework/{homeworkId?}
             method: get
             cors: true
+  teacher:
+      name: ${self:custom.base}-teacher
+      description: 'teacher function'
+      handler: src/handlers/subjects/teacher.handler
+      timeout: 30
+      memorySize: 264
+      environment:
+        TOKEN_SECRET: 'PARANGARICUTIRIMICUARO'
+      package:
+        patterns:
+          - '!src/**'
+          - 'src/handlers//subjects/teacher.*'
+          - 'src/constants.*'
+          - 'src/dynamodb/*'
+          - 'src/helpers/**/*'
+      events:
+        - http:
+            path: /subjects/teacher/{teacherEmail?}
+            method: get
+            cors: true

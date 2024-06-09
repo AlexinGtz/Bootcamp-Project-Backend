@@ -82,8 +82,13 @@ Resources:
         KeySchema: 
           - AttributeName: "id"
             KeyType: "HASH"
-          - AttributeName: "teacherEmail"
-            KeyType: "RANGE"
+        GlobalSecondaryIndexes:
+          - IndexName: "teacherEmail-Index"
+            KeySchema: 
+              - AttributeName: "teacherEmail"
+                KeyType: "HASH"
+            Projection: 
+              ProjectionType: ALL
         Tags:
           - Key: Stage
             Value: ${self:provider.stage}
