@@ -29,7 +29,7 @@ export const handler = async(event: any) => {
 
     const user = await usersDB.getItem(email);
 
-    if( user ){
+    if(user){
         return responseHelper(HTTP_CODES.FORBIDDEN, "Email already registered on the system.")
     }
 
@@ -42,8 +42,8 @@ export const handler = async(event: any) => {
     if (!lastName || lastName.trim() === ''){
         return responseHelper(HTTP_CODES.BAD_REQUEST, "Student Last name not provided.")
     }
-    if (age === ''){
-        return responseHelper(HTTP_CODES.BAD_REQUEST, "Student age not provided.")
+    if (!age || typeof(age) !== 'number'){
+        return responseHelper(HTTP_CODES.BAD_REQUEST, "Student age not provided or valid.")
     }
     
     const validEmail = validateEmail(email)
@@ -51,10 +51,7 @@ export const handler = async(event: any) => {
         return responseHelper(404, 'Email provided not valid.')     
     }
     
-    const newPassword = Math.random().toString(36).slice(-8)
-
-    const newAge = parseInt(age)
-    
+    const newPassword = Math.random().toString(36).slice(-8)  
 
     try{
         await usersDB.putItem({
@@ -62,7 +59,7 @@ export const handler = async(event: any) => {
             lastName: lastName.trim(),
             email: email.trim(),
             password: newPassword,
-            age: newAge,
+            age,
             subjects: [],
             userType: USER_TYPES.STUDENT
         })

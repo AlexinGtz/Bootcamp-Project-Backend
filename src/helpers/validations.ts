@@ -29,9 +29,7 @@ export const validateToken = async (token: string) => {
     }
     
     return {
-        email: decodedToken.email,
-        firstName: decodedToken.firstName,
-        lastName: decodedToken.lastName,
+        userEmail: decodedToken.userEmail,
         userType: decodedToken.userType
     }
 }
