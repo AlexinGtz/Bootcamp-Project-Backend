@@ -78,23 +78,6 @@ describe("Homework handler", () => {
             expect(body.message).toEqual("Homework not found");
             expect(response.statusCode).toEqual(400);      
         })
-
-        it("Should fail when the student don't have submissions", async () => {
-            const response = await handler({
-                headers: {
-                    Authorization: "someGivenToken"
-                },
-                pathParameters: {
-                    homeworkId: "3"
-                }
-            })
-            
-            const body = JSON.parse(response.body)  
-            expect(body.data.grade).toEqual(false);         
-            expect(body.data.pendingSubmission).toEqual(true); 
-            expect(body.message).toEqual("Success");
-            expect(response.statusCode).toEqual(200);        
-        })
     }) 
     
     describe("Success test", () => {    
@@ -114,5 +97,22 @@ describe("Homework handler", () => {
             expect(body.message).toEqual("Success");
             expect(response.statusCode).toEqual(200);       
         }) 
-    })
+
+        it("Should succeed when pending submissions can be calculcated", async () => {
+            const response = await handler({
+                headers: {
+                    Authorization: "someGivenToken"
+                },
+                pathParameters: {
+                    homeworkId: "3"
+                }
+            })
+            
+            const body = JSON.parse(response.body)  
+            expect(body.data.grade).toEqual(false);         
+            expect(body.data.pendingSubmission).toEqual(true); 
+            expect(body.message).toEqual("Success");
+            expect(response.statusCode).toEqual(200);        
+        })
+    }) 
 })
