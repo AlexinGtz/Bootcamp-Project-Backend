@@ -4,6 +4,7 @@ import responseHelper from "../helpers/responseHelper";
 import { validateToken } from "../helpers/validations";
 
 const homeworkDB = new CustomDynamoDB('local-bootcamp-classroom-api-homeworks', 'id')
+const homeworkSubmissionDB = new CustomDynamoDB('local-bootcamp-classroom-api-homeworkSubmissions', 'id')
 
   
 export const handler = async(event: any) => {
@@ -26,8 +27,6 @@ export const handler = async(event: any) => {
         return responseHelper(400, 'Homework not found')
     }
     
-    const homeworkSubmissionDB = new CustomDynamoDB('local-bootcamp-classroom-api-homeworkSubmissions', 'id')
-
     const homeworkSubmission = await homeworkSubmissionDB.query(homeworkId, tokenData.userEmail, "=", "homeworkId-Index", "studentEmail")
 
     const pendingSubmission = (!homeworkSubmission || homeworkSubmission.length === 0) ? true : false
