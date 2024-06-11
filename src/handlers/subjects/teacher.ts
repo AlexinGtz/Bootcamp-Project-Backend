@@ -5,7 +5,6 @@ import { validateToken } from "../../helpers/validations";
 
 const subjectsDB = new CustomDynamoDB('local-bootcamp-classroom-api-subjects', 'id')
 
-  
 export const handler = async(event: any) => {
     const tokenData = await validateToken(event.headers.Authorization)
 
@@ -19,22 +18,20 @@ export const handler = async(event: any) => {
 
     const teacherEmail = event.pathParameters.teacherEmail;
 
-    const subject = await subjectsDB.query(teacherEmail, null, null, "teacherEmail-Index")
+    const subjects = await subjectsDB.query(teacherEmail, null, null, "teacherEmail-Index")
 
-    if(!subject || subject.length === 0){
+    if(!subjects || subjects.length === 0){
         return responseHelper(400, 'No subjects found')
     }
     
-    const subjectList = []
-
-    subject.forEach((item: any) => {
-        subjectList.push({
-            "subjectId": item.id,
-            "name": item.name,
-            "description": item.description,
-            "students": item.students
-        })
-    });
+    const mappedSubjects = subjects.map((item: any) => {
+        return {
+            subjectId: item.id,
+            name: item.name,
+            description: item.description,
+            students: item.students
+        }
+    })
     
-    return responseHelper(200, 'Success', subjectList)
+    return responseHelper(200, 'Success', mappedSubjects)
 }

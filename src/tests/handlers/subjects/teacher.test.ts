@@ -50,7 +50,7 @@ describe("Teacher handler", () => {
                 headers: {
                     Authorization: "someGivenToken"
                 },
-                pathParameters: null ?? {
+                pathParameters: {
                     teacherEmail: " "
                 }
             })
