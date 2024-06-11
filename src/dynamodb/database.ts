@@ -22,6 +22,11 @@ export class CustomDynamoDB {
         this.primaryKey = primaryKey;
         this.DB = new DynamoDBClient({
             endpoint: process.env.STAGE === 'local' ? "http://localhost:4000" : undefined,
+            region: "us-east-2",
+            credentials: {
+                accessKeyId: 'XXXXXXXXXXXXXXX',
+                secretAccessKey: 'XXXXXXXXXXXXXXXXXXXXXX'
+            }
         });
         this.sortingKey = sortingKey ?? null;
     }

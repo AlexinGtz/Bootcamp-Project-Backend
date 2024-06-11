@@ -97,7 +97,47 @@ functions:
         - http:
             path: /login
             method: post
-            cors: true
+            cors: true 
+  addStudent:
+    name: ${self:custom.base}-addStudent
+    description: 'addStudent function'
+    handler: src/handlers/addStudent.handler
+    timeout: 30
+    memorySize: 264
+    environment:
+        TOKEN_SECRET: 'PARANGARICUTIRIMICUARO'
+    package:
+      patterns:
+        - '!src/**'
+        - 'src/handlers/addStudent.*'
+        - 'src/constants.*'
+        - 'src/dynamodb/*'
+        - 'src/helpers/**/*'
+    events:
+      - http:
+          path: /addStudent
+          method: post
+          cors: true
+  subjects:
+    name: ${self:custom.base}-subjects
+    description: 'subjects function'
+    handler: src/handlers/subjects.handler
+    timeout: 30
+    memorySize: 264
+    environment:
+        TOKEN_SECRET: 'PARANGARICUTIRIMICUARO'
+    package:
+      patterns:
+        - '!src/**'
+        - 'src/handlers/subjects.*'
+        - 'src/constants.*'
+        - 'src/dynamodb/*'
+        - 'src/helpers/**/*'
+    events:
+      - http:
+          path: /subjects
+          method: get
+          cors: true
   homework:
       name: ${self:custom.base}-homework
       description: 'homework function'
