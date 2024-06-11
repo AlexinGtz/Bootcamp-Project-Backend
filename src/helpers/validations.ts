@@ -18,7 +18,7 @@ export const validateToken = async (token: string) => {
     let decodedToken;
 
     try {
-        decodedToken = await tokenGen.verify(dividedToken, process.env.TOKEN_SECRET)
+        decodedToken = await tokenGen.verify(dividedToken, process.env.JWT_SECRET)
     } catch (e) {
         return null;
     }
