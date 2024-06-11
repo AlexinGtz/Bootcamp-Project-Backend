@@ -1,4 +1,4 @@
-import * as jwt from 'jsonwebtoken';
+import * as tokenGen from 'jsonwebtoken';
 
 export const validatePassword = (userDBPassword: string, userProvidedPasword: string) => {
     return userDBPassword === userProvidedPasword;
@@ -9,27 +9,26 @@ export const validateEmail = (userProvidedEmail: string) => {
 }
 
 export const validateToken = async (token: string) => {
-    console.log('token', token)
-    if(!token) {
-        return null;
-    }
-
-    // Bearer {token}
-    const splittedToken = token.split(' ')[1];
-
-    let decodedToken;
-    try {
-        decodedToken = await jwt.verify(splittedToken, process.env.TOKEN_SECRET)
-    } catch(e) {
-        return null;
-    }
-
-    if (!decodedToken){
+    if(!token){
         return null
     }
-    
+
+    const dividedToken = token.split(' ')[1];
+
+    let decodedToken;
+
+    try {
+        decodedToken = await tokenGen.verify(dividedToken, process.env.TOKEN_SECRET)
+    } catch (e) {
+        return null;
+    }
+
+    if(!decodedToken){
+        return null;
+    }
+
     return {
-        userEmail: decodedToken.userEmail,
-        userType: decodedToken.userType
+        userType: decodedToken.userType,
+        userEmail: decodedToken.userEmail
     }
 }

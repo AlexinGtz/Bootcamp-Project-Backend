@@ -1,0 +1,30 @@
+[
+  {
+      "id": "11",
+      "homeworkId": "1",
+      "studentEmail": "luiginini@gmail.com",
+      "grade": 10,
+      "submissionText": "Here is Luiginini's homework 1 submission"
+    },
+    {
+      "id": "12",
+      "homeworkId": "2",
+      "studentEmail": "luiginini@gmail.com",
+      "grade": null,
+      "submissionText": "Here is Luiginini's homework 2 submission"
+    },
+    {
+      "id": "13",
+      "homeworkId": "1",
+      "studentEmail": "tutti@gmail.com",
+      "grade": null,
+      "submissionText": "Here is Tutti's homework 1 submission"
+    },
+    {
+      "id": "14",
+      "homeworkId": "3",
+      "studentEmail": "tutti@gmail.com",
+      "grade": 7,
+      "submissionText": "Here is Tutti's homework 3 submission"
+    }
+]

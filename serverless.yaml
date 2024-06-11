@@ -56,6 +56,12 @@ custom:
         sources:
           - table: ${self:provider.stage}-${self:service}-users
             sources: [./src/seeds/users.json]
+          - table: ${self:provider.stage}-${self:service}-homeworks
+            sources: [./src/seeds/homeworks.json]
+          - table: ${self:provider.stage}-${self:service}-homeworkSubmissions
+            sources: [./src/seeds/homeworkSubmissions.json]
+          - table: ${self:provider.stage}-${self:service}-subjects
+            sources: [./src/seeds/subjects.json]
   esbuild:
     bundle: true
     minify: true
@@ -91,8 +97,7 @@ functions:
         - http:
             path: /login
             method: post
-            cors: true
-            
+            cors: true 
   addStudent:
     name: ${self:custom.base}-addStudent
     description: 'addStudent function'
@@ -113,7 +118,6 @@ functions:
           path: /addStudent
           method: post
           cors: true
-
   subjects:
     name: ${self:custom.base}-subjects
     description: 'subjects function'
@@ -134,3 +138,23 @@ functions:
           path: /subjects
           method: get
           cors: true
+  homework:
+      name: ${self:custom.base}-homework
+      description: 'homework function'
+      handler: src/handlers/homework.handler
+      timeout: 30
+      memorySize: 264
+      environment:
+        TOKEN_SECRET: 'PARANGARICUTIRIMICUARO'
+      package:
+        patterns:
+          - '!src/**'
+          - 'src/handlers/homework.*'
+          - 'src/constants.*'
+          - 'src/dynamodb/*'
+          - 'src/helpers/**/*'
+      events:
+        - http:
+            path: /homework/{homeworkId?}
+            method: get
+            cors: true
