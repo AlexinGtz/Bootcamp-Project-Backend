@@ -23,10 +23,10 @@ export class CustomDynamoDB {
         this.DB = new DynamoDBClient({
             endpoint: process.env.STAGE === 'local' ? "http://localhost:4000" : undefined,
             region: "us-east-2",
-            credentials: {
+            credentials: process.env.STAGE === 'local' ? {
                 accessKeyId: 'XXXXXXXXXXXXXXX',
                 secretAccessKey: 'XXXXXXXXXXXXXXXXXXXXXX'
-            }
+            } : undefined,
         });
         this.sortingKey = sortingKey ?? null;
     }
@@ -45,6 +45,8 @@ export class CustomDynamoDB {
                 ...sk
             }
         })
+
+        console.log('options', options);
 
         const dbRes = await this.DB.send(options);
         if(!dbRes.Item) {

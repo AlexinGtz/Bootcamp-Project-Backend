@@ -6,7 +6,6 @@ import { validateEmail, validatePassword } from "../helpers/validations";
 
 const userDB = new CustomDynamoDB('local-bootcamp-classroom-api-users', 'email')
 
-  
 export const handler = async(event: any) => {
     const body = JSON.parse(event.body);
 
@@ -26,24 +25,23 @@ export const handler = async(event: any) => {
     }
 
     const user = await userDB.getItem(userEmail);
-
+    
     if(!user) {
         return responseHelper(400, 'User not found')
     }
-    
+        
     const passwordMatch = validatePassword(user.password, userPassword)
-
+        
     if(!passwordMatch) {
         return responseHelper(400, 'Passwords do not match')
     }
     
-
     const token = tokenGen.sign(
         {
             userType: user.userType,
             userEmail
         },
-        process.env.TOKEN_SECRET,
+        process.env.JWT_SECRET,
         {
             expiresIn: '24h'
         }

@@ -2,8 +2,9 @@ service: bootcamp-classroom-api
 
 plugins: 
   - serverless-esbuild
-  - serverless-offline
   - serverless-dynamodb
+  - serverless-offline-ssm
+  - serverless-offline
 
 package:
   excludeDevDependencies: true
@@ -15,8 +16,7 @@ provider:
   region: ${opt:region, "us-east-2"}
   stage: ${opt:stage, "local"}
   timeout: 30
-  environment:
-    STAGE: ${self:provider.stage}
+  environment: ${file(./aws/env.yaml):environment}
   iam:
     role:
       statements:
@@ -42,7 +42,7 @@ provider:
 
 custom:
   service: ${self:service}
-  base: ${self:service}-${self:provider.stage}
+  base: ${self:provider.stage}-${self:service}
   dynamodb:
     stages:
       - local
@@ -72,6 +72,9 @@ custom:
       pattern: ['src/**/*.ts']
   serverless-offline:
     useChildProcesses: true
+  serverless-offline-ssm:
+    stages:
+      - local
 
 resources:
   - '${file(./aws/dynamodb.yaml)}'
@@ -84,8 +87,6 @@ functions:
       handler: src/handlers/login.handler
       timeout: 30
       memorySize: 264
-      environment:
-        TOKEN_SECRET: 'PARANGARICUTIRIMICUARO'
       package:
         patterns:
           - '!src/**'
@@ -104,8 +105,6 @@ functions:
     handler: src/handlers/addStudent.handler
     timeout: 30
     memorySize: 264
-    environment:
-        TOKEN_SECRET: 'PARANGARICUTIRIMICUARO'
     package:
       patterns:
         - '!src/**'
@@ -118,34 +117,12 @@ functions:
           path: /addStudent
           method: post
           cors: true
-  subjects:
-    name: ${self:custom.base}-subjects
-    description: 'subjects function'
-    handler: src/handlers/subjects.handler
-    timeout: 30
-    memorySize: 264
-    environment:
-        TOKEN_SECRET: 'PARANGARICUTIRIMICUARO'
-    package:
-      patterns:
-        - '!src/**'
-        - 'src/handlers/subjects.*'
-        - 'src/constants.*'
-        - 'src/dynamodb/*'
-        - 'src/helpers/**/*'
-    events:
-      - http:
-          path: /subjects
-          method: get
-          cors: true
   homework:
       name: ${self:custom.base}-homework
       description: 'homework function'
       handler: src/handlers/homework.handler
       timeout: 30
       memorySize: 264
-      environment:
-        TOKEN_SECRET: 'PARANGARICUTIRIMICUARO'
       package:
         patterns:
           - '!src/**'
