@@ -48,9 +48,9 @@ export class CustomDynamoDB {
         return unmarshall(dbRes.Item);
     }
 
-    async query(id, secondaryKeyVal?, sortComparison?, indexName?) {
+    async query(id, secondaryKeyVal?, sortComparison?, indexName?, indexSortingKey?) {
         const pkName = `#${indexName?.split('-')[0] ?? this.primaryKey}`
-        const skName = `#${this.sortingKey}`
+        const skName = `#${indexSortingKey ?? this.sortingKey}`
 
         let condition = `${pkName} = :pk`
 
@@ -64,14 +64,14 @@ export class CustomDynamoDB {
             [pkName]: indexName?.split('-')[0] ?? this.primaryKey,
         }
 
-        if (this.sortingKey && secondaryKeyVal) {
-            expressionValues[":sk"] = {
+        if (secondaryKeyVal) {
+                expressionValues[":sk"] = {
                 S: secondaryKeyVal
             }
-            expressionNames[skName] = this.sortingKey;
+            expressionNames[skName] = indexName && indexSortingKey ? indexSortingKey : this.sortingKey;
             condition = condition.concat(` AND ${skName} ${sortComparison} :sk`);
         }
-
+        
         const options = new QueryCommand({
             TableName: this.tableName,
             IndexName: indexName ?? undefined,
