@@ -6,7 +6,7 @@ import { validateToken } from "../../helpers/validations";
 import * as userMock from "../mocks/users.json"
 import * as subjectMock from "../mocks/subjects.json"
 
-jest.mock('../../../dynamodb/database', () => {
+jest.mock('../../dynamodb/database', () => {
     return ({
         CustomDynamoDB: jest.fn(()=> {
             return {
@@ -20,7 +20,7 @@ jest.mock('../../../dynamodb/database', () => {
     }) 
 })
 
-jest.mock('../../../helpers/validations',() => {
+jest.mock('../../helpers/validations',() => {
     return({
         validateToken: jest.fn((token) => {
             const userMockIndex = token === "aValidToken" ? 2 : 4
