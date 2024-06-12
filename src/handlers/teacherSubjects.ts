@@ -1,7 +1,7 @@
 // GET
-import { CustomDynamoDB } from "../../dynamodb/database";
-import responseHelper from "../../helpers/responseHelper";
-import { validateToken } from "../../helpers/validations";
+import { CustomDynamoDB } from "../dynamodb/database";
+import responseHelper from "../helpers/responseHelper";
+import { validateToken } from "../helpers/validations";
 
 const subjectsDB = new CustomDynamoDB('local-bootcamp-classroom-api-subjects', 'id')
 
@@ -16,9 +16,11 @@ export const handler = async(event: any) => {
         return responseHelper(400, 'Teacher email is required')
     }
 
-    const teacherEmail = event.pathParameters.teacherEmail;
+    if(tokenData.userEmail !== event.pathParameters.teacherEmail){
+        return responseHelper(403, 'Teacher email not in token')
+    }
 
-    const subjects = await subjectsDB.query(teacherEmail, null, null, "teacherEmail-Index")
+    const subjects = await subjectsDB.query(tokenData.userEmail, null, null, "teacherEmail-Index")
 
     if(!subjects || subjects.length === 0){
         return responseHelper(400, 'No subjects found')

@@ -1,10 +1,10 @@
 // GET
-import { handler } from "../../../handlers/subjects/teacher"
-import { CustomDynamoDB } from "../../../dynamodb/database";
-import responseHelper from "../../../helpers/responseHelper";
-import { validateToken } from "../../../helpers/validations";
-import * as userMock from "../../mocks/users.json"
-import * as subjectMock from "../../mocks/subjects.json"
+import { handler } from "../../handlers/teacherSubjects"
+import { CustomDynamoDB } from "../../dynamodb/database";
+import responseHelper from "../../helpers/responseHelper";
+import { validateToken } from "../../helpers/validations";
+import * as userMock from "../mocks/users.json"
+import * as subjectMock from "../mocks/subjects.json"
 
 jest.mock('../../../dynamodb/database', () => {
     return ({
@@ -23,9 +23,10 @@ jest.mock('../../../dynamodb/database', () => {
 jest.mock('../../../helpers/validations',() => {
     return({
         validateToken: jest.fn((token) => {
+            const userMockIndex = token === "aValidToken" ? 2 : 4
             return (token ? {
-                userType: userMock[2].userType,
-                userEmail: userMock[2].email
+                userType: userMock[userMockIndex].userType,
+                userEmail: userMock[userMockIndex].email
             } : null)                  
         })
     })
@@ -60,6 +61,21 @@ describe("Teacher handler", () => {
             expect(response.statusCode).toEqual(400);      
         })
 
+        it("Should fail when token user email and teacher email are different", async () => {
+            const response = await handler({
+                headers: {
+                    Authorization: "aValidToken"
+                },
+                pathParameters: {
+                    teacherEmail: userMock[4].email
+                }
+            })
+            
+            const body = JSON.parse(response.body)
+            expect(body.message).toEqual("Teacher email not in token");
+            expect(response.statusCode).toEqual(403);      
+        })
+
         it("Should fail when subjects are not found", async () => {
             const response = await handler({
                 headers: {
@@ -80,7 +96,7 @@ describe("Teacher handler", () => {
         it("Should succeed when the teacher has subjects", async () => {
             const response = await handler({
                 headers: {
-                    Authorization: "someGivenToken"
+                    Authorization: "aValidToken"
                 },
                 pathParameters: {
                     teacherEmail: userMock[2].email
