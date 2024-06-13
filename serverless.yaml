@@ -150,6 +150,6 @@ functions:
           - 'src/helpers/**/*'
       events:
         - http:
-            path: /teacherSubjects/{teacherEmail?}
+            path: /teacherSubjects
             method: get
             cors: true

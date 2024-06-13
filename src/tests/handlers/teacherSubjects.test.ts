@@ -23,7 +23,15 @@ jest.mock('../../dynamodb/database', () => {
 jest.mock('../../helpers/validations',() => {
     return({
         validateToken: jest.fn((token) => {
-            const userMockIndex = token === "aValidToken" ? 2 : 4
+            let userMockIndex: number;
+            if(token === "studentToken") {
+                userMockIndex = 0
+            } else if (token === "teacherTokenWithSubjects") {
+                    userMockIndex = 2
+            } else {
+                    userMockIndex = 4
+            }
+                    
             return (token ? {
                 userType: userMock[userMockIndex].userType,
                 userEmail: userMock[userMockIndex].email
@@ -46,65 +54,42 @@ describe("Teacher handler", () => {
             expect(response.statusCode).toEqual(403);      
         })
 
-        it("Should fail when the teacher email is not given", async () => {
+        it("Should fail when the user type is not a TEACHER", async () => {
             const response = await handler({
                 headers: {
-                    Authorization: "someGivenToken"
-                },
-                pathParameters: {
-                    teacherEmail: " "
-                }
-            })
-            
-            const body = JSON.parse(response.body)
-            expect(body.message).toEqual("Teacher email is required");
-            expect(response.statusCode).toEqual(400);      
-        })
-
-        it("Should fail when token user email and teacher email are different", async () => {
-            const response = await handler({
-                headers: {
-                    Authorization: "aValidToken"
-                },
-                pathParameters: {
-                    teacherEmail: userMock[4].email
-                }
-            })
-            
-            const body = JSON.parse(response.body)
-            expect(body.message).toEqual("Teacher email not in token");
-            expect(response.statusCode).toEqual(403);      
-        })
-
-        it("Should fail when subjects are not found", async () => {
-            const response = await handler({
-                headers: {
-                    Authorization: "someGivenToken"
-                },
-                pathParameters: {
-                    teacherEmail: userMock[4].email
-                }
-            })
-            
-            const body = JSON.parse(response.body)
-            expect(body.message).toEqual("No subjects found");
-            expect(response.statusCode).toEqual(400);      
-        })
-    }) 
-    
-    describe("Success test", () => {    
-        it("Should succeed when the teacher has subjects", async () => {
-            const response = await handler({
-                headers: {
-                    Authorization: "aValidToken"
-                },
-                pathParameters: {
-                    teacherEmail: userMock[2].email
+                    Authorization: "studentToken"
                 }
             })
             
             const body = JSON.parse(response.body) 
-            expect(body.data.length).toBeGreaterThanOrEqual(0)      
+            expect(body.data).toEqual(undefined);     
+            expect(body.message).toEqual("User type is not a TEACHER");
+            expect(response.statusCode).toEqual(400);       
+        }) 
+
+        it("Should fail when the teacher has not subjects", async () => {
+            const response = await handler({
+                headers: {
+                    Authorization: "aGivenToken"
+                }
+            })
+            
+            const body = JSON.parse(response.body) 
+            expect(body.data).toEqual(undefined);     
+            expect(body.message).toEqual("No subjects found");
+            expect(response.statusCode).toEqual(400);       
+        })
+    }) 
+    
+    describe("Success test", () => {    
+        it("Should succeed when the teacher and its subjects are retrieved", async () => {
+            const response = await handler({
+                headers: {
+                    Authorization: "teacherTokenWithSubjects"
+                }
+            })
+            
+            const body = JSON.parse(response.body) 
             expect(body.message).toEqual("Success");
             expect(response.statusCode).toEqual(200);       
         }) 
