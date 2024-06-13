@@ -14,14 +14,10 @@ export const handler = async(event: any) => {
         return responseHelper(403, 'Fail Authenticating');
     }
  
-    if(!event.queryStringParameters) {
+    if(!event.queryStringParameters || event.queryStringParameters?.subjectId.trim() === '') {
         return responseHelper(400, 'Subject ID is required')
     }
     
-    if(event.queryStringParameters.subjectId.trim() === '') {
-        return responseHelper(400, 'Subject ID is required')
-    }
-
     const subject = await subjectsDB.getItem(event.queryStringParameters.subjectId);
 
     if(!subject || subject.length === 0) {

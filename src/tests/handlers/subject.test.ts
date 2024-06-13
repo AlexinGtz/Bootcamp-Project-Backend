@@ -63,6 +63,7 @@ describe("Subject handler", () => {
             expect(response.statusCode).toEqual(400);      
         })
 
+        
         it("Should fail when the subject ID is not given (trim)", async () => {
             const response = await handler({
                 headers: {
