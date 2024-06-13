@@ -62,5 +62,21 @@
                         "lastName": "Urias",
                         "email": "luiginini@gmail.com"
                     }] 
+    }, 
+    {
+        "id": "S5",
+        "teacherEmail": "chipi@chapa.com",
+        "name": "English III",
+        "description": "Some English III",
+        "students": [{                      
+                        "firstName": "Tutti",
+                        "lastName": "Da Capo",
+                        "email": "tutti@gmail.com"
+                    },
+                    {   
+                        "firstName": "Luis",
+                        "lastName": "Urias",
+                        "email": "luiginini@gmail.com"
+                    }] 
     }
 ]

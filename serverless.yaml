@@ -153,3 +153,21 @@ functions:
             path: /teacherSubjects/{teacherEmail?}
             method: get
             cors: true
+  subject:
+      name: ${self:custom.base}-subject
+      description: 'subject function'
+      handler: src/handlers/subject.handler
+      timeout: 30
+      memorySize: 264
+      package:
+        patterns:
+          - '!src/**'
+          - 'src/handlers/subject.*'
+          - 'src/constants.*'
+          - 'src/dynamodb/*'
+          - 'src/helpers/**/*'
+      events:
+        - http:
+            path: /subject
+            method: get
+            cors: true

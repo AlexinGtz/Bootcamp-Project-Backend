@@ -12,7 +12,11 @@ export const handler = async(event: any) => {
         return responseHelper(403, 'Fail Authenticating');
     }
 
-    if(!event.pathParameters || event.pathParameters.teacherEmail.trim() === '' || tokenData.userType !== "TEACHER"){
+    if(tokenData.userType !== "TEACHER"){
+        return responseHelper(400, 'User type is not a TEACHER')
+    }
+
+    if(!event.pathParameters || event.pathParameters.teacherEmail.trim() === ''){
         return responseHelper(400, 'Teacher email is required')
     }
 
