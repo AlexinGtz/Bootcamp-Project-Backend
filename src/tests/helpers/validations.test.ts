@@ -13,7 +13,6 @@ jest.mock('jsonwebtoken',() => {
     })
 })
   
-
 describe("Validations", () => {
   
     describe("User password validate function", () => {
@@ -34,7 +33,7 @@ describe("Validations", () => {
     })
 
     describe("User email validate function", () => {
-    
+
         describe("Fail test", () => {
             it("Should fail when user email format is not valid", () => {
                 const response = validateEmail("not.valid.email")
@@ -50,9 +49,14 @@ describe("Validations", () => {
         })
     })
 
-    describe("Verify token function", () => {
+    describe("Validate token function", () => {
     
         describe("Fail test", () => {
+            it("Should fail when the token is not given", async () => {
+                let response = await validateToken("")
+                expect(response).toEqual(null);
+            })
+        
             it("Should fail when the token can't be decoded", async () => {
                 let response = await tokenGen.verify()
                 expect(response).toEqual(null);
@@ -60,6 +64,11 @@ describe("Validations", () => {
         })
 
         describe("Success test", () => { 
+            it("Should succeed when token is given", async () => {
+                const response = await validateToken("Bearer someToken")
+                expect(response).toEqual(null)
+            })
+
             it("Should succeed when token can be decoded", async () => {
                 const response = await tokenGen.verify("token", "secret")
                 expect(response).toEqual({                    

@@ -135,3 +135,21 @@ functions:
             path: /homework/{homeworkId?}
             method: get
             cors: true
+  teacherSubjects:
+      name: ${self:custom.base}-teacherSubjects
+      description: 'teacherSubjects function'
+      handler: src/handlers/teacherSubjects.handler
+      timeout: 30
+      memorySize: 264
+      package:
+        patterns:
+          - '!src/**'
+          - 'src/handlers/teacherSubjects.*'
+          - 'src/constants.*'
+          - 'src/dynamodb/*'
+          - 'src/helpers/**/*'
+      events:
+        - http:
+            path: /teacherSubjects
+            method: get
+            cors: true

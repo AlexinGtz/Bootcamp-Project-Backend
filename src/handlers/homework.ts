@@ -12,7 +12,6 @@ export const handler = async(event: any) => {
 
     if(!tokenData){
         return responseHelper(403, 'Fail Authenticating');
-
     }
 
     if(!event.pathParameters || event.pathParameters.homeworkId.trim() === '') {
