@@ -8,7 +8,11 @@
     "start": "serverless offline start --stage local --region us-east-2 --reloadHandler --noPrependStageInUrl",
     "serverless": "serverless",
     "ddb": "set DYNAMO_ENDPOINT=http://localhost:4000 && dynamodb-admin",
-    "ddb-l": "DYNAMO_ENDPOINT=http://127.0.0.1:4000 dynamodb-admin"
+    "ddb-l": "DYNAMO_ENDPOINT=http://127.0.0.1:4000 dynamodb-admin",
+    "package": "serverless package --stage qa --region us-east-2 -p ./package",
+    "deploy": "serverless deploy --stage qa --region us-east-2 -p ./package",
+    "release": "npm run package && npm run deploy && npm run remove-package",
+    "remove-package": "rm ./package -rf"
   },
   "author": "",
   "license": "ISC",
