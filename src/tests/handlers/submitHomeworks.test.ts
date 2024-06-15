@@ -21,10 +21,8 @@ jest.mock('../../dynamodb/database', () => {
                        homeworkSubmissionMock.filter((submission) => submission.homeworkId === homeworkId && submission.studentEmail === studentId)  
                     )                            
                 }),
-                putItem: jest.fn((homeworkId, dos, tres, cuatro) => {
-                    return Promise.resolve({
-                        homeworkId: homeworkId
-                    })                            
+                putItem: jest.fn((homeworkId) => {
+                    return Promise.resolve({})                            
                 })
             }
         })
