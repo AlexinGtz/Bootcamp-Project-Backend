@@ -23,7 +23,7 @@ export const handler = async(event: any) => {
         submission,
     } = body;
     
-    if(!studentId || studentId.trim()==='') {
+    if(!studentId || studentId.trim() === '') {
             return responseHelper(400, 'Student ID not provided')
     }
 
@@ -31,11 +31,11 @@ export const handler = async(event: any) => {
         return responseHelper(403, 'Student email not in token')
     }
 
-    if(!homeworkId || homeworkId.trim()==='') {
+    if(!homeworkId || homeworkId.trim() === '') {
         return responseHelper(400, 'Homework ID not provided')
     }
 
-    if(!submission || submission.trim()==='') {
+    if(!submission || submission.trim() === '') {
         return responseHelper(400, 'Submission not provided')
     }
 
@@ -75,7 +75,6 @@ export const handler = async(event: any) => {
         });
     } catch(error) {
         return responseHelper(500, `Failed to submit the homework - ${error.message}`)
-
     }
 
     return responseHelper(200, 'Success')

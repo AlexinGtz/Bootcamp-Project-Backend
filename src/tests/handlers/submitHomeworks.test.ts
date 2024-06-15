@@ -4,23 +4,27 @@ import { CustomDynamoDB } from "../../dynamodb/database";
 import responseHelper from "../../helpers/responseHelper";
 import { validateToken } from "../../helpers/validations";
 import * as userMock from "../mocks/users.json"
-import * as subjectMock from "../mocks/subjects.json"
+import * as homeworkMock from "../mocks/homeworks.json"
 import * as homeworkSubmissionMock from "../mocks/homeworkSubmissions.json"
 
 
 jest.mock('../../dynamodb/database', () => {
     return ({
-        CustomDynamoDB: jest.fn(()=> {
+        CustomDynamoDB: jest.fn(() => {
             return {
-                getItem: jest.fn((studentId)=> {
-                    return Promise.resolve(
-                        userMock.find((user) => user.email === studentId)
-                    )                             
+                getItem: jest.fn((Id) => {
+                    const mockItem = (Id === userMock[0].email) ? userMock.find((user) => user.email === Id) : homeworkMock.find((homework) => homework.id === Id) 
+                    return Promise.resolve(mockItem)
                 }),
-                query: jest.fn((homeworkId,studentId)=> {
+                query: jest.fn((homeworkId,studentId) => {
                     return Promise.resolve(
-                        homeworkSubmissionMock.filter((submission) => submission.homeworkId === homeworkId && submission.studentEmail === studentId)
+                       homeworkSubmissionMock.filter((submission) => submission.homeworkId === homeworkId && submission.studentEmail === studentId)  
                     )                            
+                }),
+                putItem: jest.fn((homeworkId, dos, tres, cuatro) => {
+                    return Promise.resolve({
+                        homeworkId: homeworkId
+                    })                            
                 })
             }
         })
@@ -32,7 +36,7 @@ jest.mock('../../helpers/validations',() => {
         validateToken: jest.fn((token) => {
             let mockUserEmail: string;
             
-            if(token === "same@token.email") {
+            if(token === "sameTokenEmail") {
                 mockUserEmail = token
             } else if (token === "foundStudent") {
                     mockUserEmail = userMock[0].email
@@ -80,7 +84,7 @@ describe("submitHomework handler", () => {
         it("Should fail when token user email and student email are different", async () => {
             const response = await handler({
                 headers: {
-                    Authorization: "different@token.email"
+                    Authorization: "sameTokenEmail"
                 },
                 body: JSON.stringify({
                     studentId: "same@token.email"
@@ -92,13 +96,13 @@ describe("submitHomework handler", () => {
             expect(response.statusCode).toEqual(403);      
         })
 
-        it("Should fail when the Homework ID is not given", async () => {
+        it("Should fail when the homework ID is not given", async () => {
             const response = await handler({
                 headers: {
                     Authorization: "foundStudent"
                 },
                 body: JSON.stringify({
-                    studentId: userMock[1].email,
+                    studentId: userMock[0].email,
                     homeworkId: " "
                 })
             })
@@ -108,14 +112,14 @@ describe("submitHomework handler", () => {
             expect(response.statusCode).toEqual(400);      
         })
 
-        it("Should fail when the Submission is not given", async () => {
+        it("Should fail when the submission is not given", async () => {
             const response = await handler({
                 headers: {
-                    Authorization: "aValidToken"
+                    Authorization: "foundStudent"
                 },
                 body: JSON.stringify({
-                    studentId: userMock[1].email,
-                    homeworkId: "1", //mock
+                    studentId: userMock[0].email,
+                    homeworkId: homeworkMock[0].id, 
                     submission: " "
                 })
             })
@@ -128,12 +132,12 @@ describe("submitHomework handler", () => {
         it("Should fail when user is not found", async () => {
             const response = await handler({
                 headers: {
-                    Authorization: "aValidToken"
+                    Authorization: "sameTokenEmail"
                 },
                 body: JSON.stringify({
-                    studentId: "not@user.test",
-                    homeworkId: "1" ,
-                    submission: "some"
+                    studentId: "sameTokenEmail",
+                    homeworkId: homeworkMock[0].id ,
+                    submission: "Some submission text"
                 })
             })
             
@@ -141,23 +145,59 @@ describe("submitHomework handler", () => {
             expect(body.message).toEqual("User not found");
             expect(response.statusCode).toEqual(400);      
         })
-    }) 
-    
-    describe("Success test", () => {    
-        it.skip("Should succeed when the teacher has subjects", async () => {
+
+        it("Should fail when the homework is not found", async () => {
             const response = await handler({
                 headers: {
-                    Authorization: "aValidToken"
+                    Authorization: "foundStudent"
                 },
-                pathParameters: {
-                    teacherEmail: userMock[2].email
-                }
+                body: JSON.stringify({
+                    studentId: userMock[0].email,
+                    homeworkId: "Not a valid homework", 
+                    submission: "Some submission text"
+                })
+            })
+        
+            const body = JSON.parse(response.body)
+            expect(body.message).toEqual("Homework not found");
+            expect(response.statusCode).toEqual(400);      
+        })
+
+        it("Should fail when the homework has been submitted previously by the student", async () => {
+            const response = await handler({
+                headers: {
+                    Authorization: "foundStudent"
+                },
+                body: JSON.stringify({
+                    studentId: userMock[0].email,
+                    homeworkId: homeworkMock[1].id, 
+                    submission: "Some submission text"
+                })
+            })
+        
+            const body = JSON.parse(response.body)
+            expect(body.message).toEqual("Already exists a homework submission for this student");
+            expect(response.statusCode).toEqual(400);      
+        })
+    })
+
+    describe("Success test", () => {    
+        it("Should succeed when the homework is submitted", async () => {
+            const response = await handler({
+                headers: {
+                    Authorization: "foundStudent"
+                },
+                body: JSON.stringify({
+                    studentId: userMock[0].email,
+                    homeworkId: homeworkMock[2].id, 
+                    submission: "Some submission text"
+                })
             })
             
-            const body = JSON.parse(response.body) 
-            expect(body.data.length).toBeGreaterThanOrEqual(0)      
+            const body = JSON.parse(response.body)
             expect(body.message).toEqual("Success");
             expect(response.statusCode).toEqual(200);       
         }) 
     })
 })
+
