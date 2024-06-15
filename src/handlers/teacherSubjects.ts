@@ -16,14 +16,6 @@ export const handler = async(event: any) => {
         return responseHelper(400, 'User type is not a TEACHER')
     }
 
-    if(!event.pathParameters || event.pathParameters.teacherEmail.trim() === ''){
-        return responseHelper(400, 'Teacher email is required')
-    }
-
-    if(tokenData.userEmail !== event.pathParameters.teacherEmail){
-        return responseHelper(403, 'Teacher email not in token')
-    }
-
     const subjects = await subjectsDB.query(tokenData.userEmail, null, null, "teacherEmail-Index")
 
     if(!subjects || subjects.length === 0){
