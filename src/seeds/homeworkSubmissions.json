@@ -4,27 +4,31 @@
       "homeworkId": "1",
       "studentEmail": "luiginini@gmail.com",
       "grade": 10,
-      "submissionText": "Here is Luiginini's homework 1 submission"
+      "submissionText": "Here is Luiginini's homework 1 submission",
+      "submissionDate": "12/12/2023"
     },
     {
       "id": "12",
       "homeworkId": "2",
       "studentEmail": "luiginini@gmail.com",
       "grade": null,
-      "submissionText": "Here is Luiginini's homework 2 submission"
+      "submissionText": "Here is Luiginini's homework 2 submission",
+      "submissionDate": "12/10/2023"
     },
     {
       "id": "13",
       "homeworkId": "1",
       "studentEmail": "tutti@gmail.com",
       "grade": null,
-      "submissionText": "Here is Tutti's homework 1 submission"
+      "submissionText": "Here is Tutti's homework 1 submission",
+      "submissionDate": "12/06/2024"
     },
     {
       "id": "14",
       "homeworkId": "3",
       "studentEmail": "tutti@gmail.com",
       "grade": 7,
-      "submissionText": "Here is Tutti's homework 3 submission"
+      "submissionText": "Here is Tutti's homework 3 submission",
+      "submissionDate": "01/01/2024"
     }
 ]
