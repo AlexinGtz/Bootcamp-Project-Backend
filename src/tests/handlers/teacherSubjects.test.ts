@@ -40,7 +40,7 @@ jest.mock('../../helpers/validations',() => {
     })
 })
 
-describe("Teacher handler", () => {
+describe("Teacher Subjects handler", () => {
     describe("Fail test", () => {
         it("Should fail when user token is not given", async () => {
             const response = await handler({
