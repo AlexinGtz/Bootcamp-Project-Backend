@@ -1,4 +1,4 @@
-// GET
+// POST
 import { handler } from "../../handlers/submitHomework"
 import { CustomDynamoDB } from "../../dynamodb/database";
 import responseHelper from "../../helpers/responseHelper";
@@ -21,8 +21,13 @@ jest.mock('../../dynamodb/database', () => {
                        homeworkSubmissionMock.filter((submission) => submission.homeworkId === homeworkId && submission.studentEmail === studentId)  
                     )                            
                 }),
-                putItem: jest.fn((homeworkId) => {
-                    return Promise.resolve({})                            
+                putItem: jest.fn((object) => {
+                    if (object.submissionText === "Throw error") {
+                        return Promise.reject(new Error('Cannot establish DB connection'))
+                     }
+                    else {
+                        return Promise.resolve({}) 
+                    }          
                 })
             }
         })
@@ -90,7 +95,7 @@ describe("submitHomework handler", () => {
             })
             
             const body = JSON.parse(response.body)
-            expect(body.message).toEqual("Student email not in token");
+            expect(body.message).toEqual("Student email does not match token");
             expect(response.statusCode).toEqual(403);      
         })
 
@@ -177,10 +182,8 @@ describe("submitHomework handler", () => {
             expect(body.message).toEqual("Already exists a homework submission for this student");
             expect(response.statusCode).toEqual(400);      
         })
-    })
 
-    describe("Success test", () => {    
-        it("Should succeed when the homework is submitted", async () => {
+        it("Should fail when the submission date has passed", async () => {
             const response = await handler({
                 headers: {
                     Authorization: "foundStudent"
@@ -193,9 +196,44 @@ describe("submitHomework handler", () => {
             })
             
             const body = JSON.parse(response.body)
+            expect(body.message).toEqual("The submission date has passed");
+            expect(response.statusCode).toEqual(400);       
+        }) 
+
+        it("Should fail when the submission cannot be processed", async () => {
+            const response = await handler({
+                headers: {
+                    Authorization: "foundStudent"
+                },
+                body: JSON.stringify({
+                    studentId: userMock[0].email, 
+                    homeworkId: homeworkMock[3].id,
+                    submission: "Throw error"
+                })
+            })
+            
+            const body = JSON.parse(response.body)
+            expect(body.message).toEqual("Failed to submit the homework - Cannot establish DB connection");
+            expect(response.statusCode).toEqual(500);       
+        }) 
+    })
+
+    describe("Success test", () => {    
+        it("Should succeed when the homework is submitted", async () => {
+            const response = await handler({
+                headers: {
+                    Authorization: "foundStudent"
+                },
+                body: JSON.stringify({
+                    studentId: userMock[0].email,
+                    homeworkId: homeworkMock[3].id, 
+                    submission: "Some submission text"
+                })
+            })
+            
+            const body = JSON.parse(response.body)
             expect(body.message).toEqual("Success");
             expect(response.statusCode).toEqual(200);       
         }) 
     })
 })
-

@@ -28,7 +28,7 @@ export const handler = async(event: any) => {
     }
 
     if(tokenData.userEmail !== studentId){
-        return responseHelper(403, 'Student email not in token')
+        return responseHelper(403, 'Student email does not match token')
     }
 
     if(!homeworkId || homeworkId.trim() === '') {
@@ -39,19 +39,19 @@ export const handler = async(event: any) => {
         return responseHelper(400, 'Submission not provided')
     }
 
-    const user = await userDB.getItem(studentId);
-    
+    const [user, homework, homeworkSubmission] = await Promise.all([
+        userDB.getItem(studentId), 
+        homeworkDB.getItem(homeworkId),
+        homeworkSubmissionDB.query(homeworkId, tokenData.userEmail, "=", "homeworkId-Index", "studentEmail") 
+    ])
+
     if(!user) {
         return responseHelper(400, 'User not found')
     }
-
-    const homework = await homeworkDB.getItem(homeworkId);
     
     if(!homework) {
         return responseHelper(400, 'Homework not found')
     }
-
-    const homeworkSubmission = await homeworkSubmissionDB.query(homeworkId, tokenData.userEmail, "=", "homeworkId-Index", "studentEmail")
     
     if(homeworkSubmission.length !== 0) {
         return responseHelper(400, 'Already exists a homework submission for this student')
@@ -61,7 +61,7 @@ export const handler = async(event: any) => {
     const dueDate = new Date(homework.dueDate)
 
     if (dueDate < submissionDate) {
-        return responseHelper(400, 'The submission date is out of range')
+        return responseHelper(400, 'The submission date has passed')
     }
 
     try {
