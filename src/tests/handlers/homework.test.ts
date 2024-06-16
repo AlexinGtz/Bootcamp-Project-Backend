@@ -70,7 +70,7 @@ describe("Homework handler", () => {
                     Authorization: "someGivenToken"
                 },
                 pathParameters: {
-                    homeworkId: "4"
+                    homeworkId: "Not a valid homeworkId"
                 }
             })
             

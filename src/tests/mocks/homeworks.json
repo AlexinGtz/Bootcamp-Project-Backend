@@ -1,24 +1,30 @@
 [
-    {
-        "id": "1",
-        "subjectId": "S1",
-        "name": "Activity 1 - Unit 1",
-        "dueDate": "12-31-2024",
-        "description": "Make an essay with at least 500 words"
-      },
-      {
-        "id": "2",
-        "subjectId": "S2",
-        "name": "Activity 2 - Unit 3",
-        "dueDate": "11-30-2024",
-        "description": "Response the 'past-tense' quiz"
-      }
-      ,
-      {
-        "id": "3",
-        "subjectId": "S2",
-        "name": "Activity 3 - Unit 3",
-        "dueDate": "12-10-2024",
-        "description": "Response the 'simple present' quiz"
-      }
+  {
+    "id": "1",
+    "subjectId": "S1",
+    "name": "Activity 1 - Unit 1",
+    "dueDate": "2024-12-31T00:00:00.000Z",
+    "description": "Make an essay with at least 500 words"
+  },
+  {
+    "id": "2",
+    "subjectId": "S2",
+    "name": "Activity 2 - Unit 3",
+    "dueDate": "2024-11-30T00:00:00.000Z",
+    "description": "Response the 'past-tense' quiz"
+  },
+  {
+    "id": "3",
+    "subjectId": "S2",
+    "name": "Activity 3 - Unit 3",
+    "dueDate": "2024-01-12T00:00:00.000Z",
+    "description": "Response the 'simple present' quiz"
+  },
+  {
+    "id": "4",
+    "subjectId": "S2",
+    "name": "Activity 4 - Unit 3",
+    "dueDate": "2024-12-12T00:00:00.000Z",
+    "description": "Response the 'simple present' part II quiz"
+  }
 ]

@@ -171,3 +171,21 @@ functions:
             path: /subject
             method: get
             cors: true
+  submitHomework:
+      name: ${self:custom.base}-submitHomework
+      description: 'submitHomework function'
+      handler: src/handlers/submitHomework.handler
+      timeout: 30
+      memorySize: 264
+      package:
+        patterns:
+          - '!src/**'
+          - 'src/handlers/submitHomework.*'
+          - 'src/constants.*'
+          - 'src/dynamodb/*'
+          - 'src/helpers/**/*'
+      events:
+        - http:
+            path: /submitHomework
+            method: post
+            cors: true
