@@ -15,6 +15,10 @@ export const handler = async(event: any) => {
         return responseHelper(403, 'Fail Authenticating');
     }
  
+    if(tokenData.userType !== "STUDENT"){
+        return responseHelper(401, 'The user type is not a STUDENT')
+    }
+
     const body = JSON.parse(event.body);
 
     const {
@@ -26,7 +30,7 @@ export const handler = async(event: any) => {
     if(!studentId || studentId.trim() === '') {
             return responseHelper(400, 'Student ID not provided')
     }
-
+    
     if(tokenData.userEmail !== studentId){
         return responseHelper(403, 'Student email does not match token')
     }

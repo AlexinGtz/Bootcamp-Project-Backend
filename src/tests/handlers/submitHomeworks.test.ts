@@ -38,7 +38,7 @@ jest.mock('../../helpers/validations',() => {
     return({
         validateToken: jest.fn((token) => {
             let mockUserEmail: string;
-            
+            let mockUserType = token === "teacherToken" ? "TEACHER" : "STUDENT"
             if(token === "sameTokenEmail") {
                 mockUserEmail = token
             } else if (token === "foundStudent") {
@@ -48,7 +48,7 @@ jest.mock('../../helpers/validations',() => {
             }
                     
             return (token ? {
-                userType: "anyUserType",
+                userType: mockUserType,
                 userEmail: mockUserEmail
             } : null)                  
         })
@@ -67,6 +67,18 @@ describe("submitHomework handler", () => {
             const body = JSON.parse(response.body)
             expect(body.message).toEqual("Fail Authenticating");
             expect(response.statusCode).toEqual(403);      
+        })
+
+        it("Should fail when user type is not a STUDENT", async () => {
+            const response = await handler({
+                headers: {
+                    Authorization: "teacherToken"
+                }
+            })
+            
+            const body = JSON.parse(response.body)
+            expect(body.message).toEqual("The user type is not a STUDENT");
+            expect(response.statusCode).toEqual(401);      
         })
 
         it("Should fail when the Student ID is not given", async () => {
