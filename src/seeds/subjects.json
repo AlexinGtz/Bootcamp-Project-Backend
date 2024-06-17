@@ -1,0 +1,57 @@
+[
+    {
+        "id": "1",
+        "teacherEmail": "pparapedro@pe.com",
+        "name": "Math",
+        "description": "Ecuaciones lineales III",
+        
+        "students": [{   
+                        "firstName": "Luis",
+                        "lastName": "Urias",
+                        "grade": 9,
+                        "email": "luiginini@gmail.com"
+                     },
+                     {                      
+                        "firstName": "Hagri",
+                        "lastName": "Pota",
+                        "grade": 8,
+                        "email": "hagri@howarts.com"
+                    }]      
+    },
+    {
+        "id": "2",
+        "teacherEmail": "juanperez2@gmail.com",
+        "name": "Spanish",
+        "description": "Spanish Native Talking I",
+        "grade": 9,
+        "students": [{   
+                        "firstName": "Luis",
+                        "lastName": "Urias",
+                        "email": "luiginini@gmail.com"
+                     },
+                     {                      
+                        "firstName": "Hagri",
+                        "lastName": "Pota",
+                        "email": "hagri@howarts.com"
+                    }]
+    },
+    {
+        "id": "3",
+        "teacherEmail": "snape.s32@howarts.com",
+        "name": "spells and enchantments",
+        "description": "Spells III",
+        "grade": 7,
+        "students": [{   
+                        "firstName": "Luis",
+                        "lastName": "Urias",
+                        "grade": 6,
+                        "email": "luiginini@gmail.com"
+                     },
+                     {                      
+                        "firstName": "Hagri",
+                        "lastName": "Pota",
+                        "grade": 7,
+                        "email": "hagri@howarts.com"
+                    }]
+    }
+]
