@@ -27,7 +27,8 @@ export const handler = async(event: any) => {
     const [homework, user, homeworkSubmission] = await Promise.all([
         homeworkDB.getItem(homeworkId),
         userDB.getItem(tokenData.userEmail),
-        homeworkSubmissionDB.query(homeworkId, null, null, "homeworkId-Index")])
+        homeworkSubmissionDB.query(homeworkId, null, null, "homeworkId-Index")
+    ])
 
     if(!homework) {
         return responseHelper(400, 'Homework not found')
@@ -37,16 +38,18 @@ export const handler = async(event: any) => {
         return responseHelper(400, 'The homework does not belong to the teacher')
     }
 
+    const studentSubmissions = await Promise.all(homeworkSubmission.map(async (item: any) => {
+        const user = await userDB.getItem(item.studentEmail)
+        return {
+            studentName: `${user.firstName} ${user.lastName}`,
+            submissionText: item.submissionText
+        }
+    }))
+
     const homeworkDetails = {
         name: homework.name,
         description: homework.description,
-        submissions: await Promise.all(homeworkSubmission.map(async (item: any) => {
-            const user = await userDB.getItem(item.studentEmail)
-            return {
-                studentName: `${user.firstName} ${user.lastName}`,
-                submissionText: item.submissionText
-            }
-        })),
+        submissions: studentSubmissions,
         dueDate: homework.dueDate 
     }
     
