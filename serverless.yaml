@@ -207,3 +207,21 @@ functions:
             path: /teacherHomework/{homeworkId?}
             method: get
             cors: true
+  addSubject:
+      name: ${self:custom.base}-addSubject
+      description: 'addSubject function'
+      handler: src/handlers/addSubject.handler
+      timeout: 30
+      memorySize: 264
+      package:
+        patterns:
+          - '!src/**'
+          - 'src/handlers/addSubject.*'
+          - 'src/constants.*'
+          - 'src/dynamodb/*'
+          - 'src/helpers/**/*'
+      events:
+        - http:
+            path: /addSubject
+            method: post
+            cors: true
