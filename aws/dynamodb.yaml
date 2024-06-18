@@ -52,6 +52,8 @@ Resources:
             AttributeType: "S"
           - AttributeName: "studentEmail"
             AttributeType: "S"
+          - AttributeName: "subjectId"
+            AttributeType: "S"
         KeySchema: 
           - AttributeName: "id"
             KeyType: "HASH"
@@ -62,6 +64,12 @@ Resources:
                 KeyType: "HASH"
               - AttributeName: "studentEmail"
                 KeyType: "RANGE"
+            Projection: 
+              ProjectionType: ALL
+          - IndexName: "subjectId-Index"
+            KeySchema: 
+              - AttributeName: "subjectId"
+                KeyType: "HASH"
             Projection: 
               ProjectionType: ALL
         Tags:
