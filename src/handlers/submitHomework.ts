@@ -73,6 +73,7 @@ export const handler = async(event: any) => {
             id: uuidv4(),
             homeworkId: homeworkId,
             studentEmail: studentId,
+            subjectId: homework.subjectId,
             grade: null,
             submissionText: submission,
             submissionDate: submissionDate.toISOString()
