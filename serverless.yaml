@@ -2,8 +2,9 @@ service: bootcamp-classroom-api
 
 plugins: 
   - serverless-esbuild
-  - serverless-offline
   - serverless-dynamodb
+  - serverless-offline-ssm
+  - serverless-offline
 
 package:
   excludeDevDependencies: true
@@ -15,8 +16,7 @@ provider:
   region: ${opt:region, "us-east-2"}
   stage: ${opt:stage, "local"}
   timeout: 30
-  environment:
-    STAGE: ${self:provider.stage}
+  environment: ${file(./aws/env.yaml):environment}
   iam:
     role:
       statements:
@@ -42,7 +42,7 @@ provider:
 
 custom:
   service: ${self:service}
-  base: ${self:service}-${self:provider.stage}
+  base: ${self:provider.stage}-${self:service}
   dynamodb:
     stages:
       - local
@@ -56,6 +56,12 @@ custom:
         sources:
           - table: ${self:provider.stage}-${self:service}-users
             sources: [./src/seeds/users.json]
+          - table: ${self:provider.stage}-${self:service}-homeworks
+            sources: [./src/seeds/homeworks.json]
+          - table: ${self:provider.stage}-${self:service}-homeworkSubmissions
+            sources: [./src/seeds/homeworkSubmissions.json]
+          - table: ${self:provider.stage}-${self:service}-subjects
+            sources: [./src/seeds/subjects.json]
   esbuild:
     bundle: true
     minify: true
@@ -66,6 +72,9 @@ custom:
       pattern: ['src/**/*.ts']
   serverless-offline:
     useChildProcesses: true
+  serverless-offline-ssm:
+    stages:
+      - local
 
 resources:
   - '${file(./aws/dynamodb.yaml)}'
@@ -78,8 +87,6 @@ functions:
       handler: src/handlers/login.handler
       timeout: 30
       memorySize: 264
-      environment:
-        TOKEN_SECRET: 'PARANGARICUTIRIMICUARO'
       package:
         patterns:
           - '!src/**'
@@ -90,5 +97,95 @@ functions:
       events:
         - http:
             path: /login
+            method: post
+            cors: true 
+  addStudent:
+    name: ${self:custom.base}-addStudent
+    description: 'addStudent function'
+    handler: src/handlers/addStudent.handler
+    timeout: 30
+    memorySize: 264
+    package:
+      patterns:
+        - '!src/**'
+        - 'src/handlers/addStudent.*'
+        - 'src/constants.*'
+        - 'src/dynamodb/*'
+        - 'src/helpers/**/*'
+    events:
+      - http:
+          path: /addStudent
+          method: post
+          cors: true
+  homework:
+      name: ${self:custom.base}-homework
+      description: 'homework function'
+      handler: src/handlers/homework.handler
+      timeout: 30
+      memorySize: 264
+      package:
+        patterns:
+          - '!src/**'
+          - 'src/handlers/homework.*'
+          - 'src/constants.*'
+          - 'src/dynamodb/*'
+          - 'src/helpers/**/*'
+      events:
+        - http:
+            path: /homework/{homeworkId?}
+            method: get
+            cors: true
+  teacherSubjects:
+      name: ${self:custom.base}-teacherSubjects
+      description: 'teacherSubjects function'
+      handler: src/handlers/teacherSubjects.handler
+      timeout: 30
+      memorySize: 264
+      package:
+        patterns:
+          - '!src/**'
+          - 'src/handlers/teacherSubjects.*'
+          - 'src/constants.*'
+          - 'src/dynamodb/*'
+          - 'src/helpers/**/*'
+      events:
+        - http:
+            path: /teacherSubjects
+            method: get
+            cors: true
+  subject:
+      name: ${self:custom.base}-subject
+      description: 'subject function'
+      handler: src/handlers/subject.handler
+      timeout: 30
+      memorySize: 264
+      package:
+        patterns:
+          - '!src/**'
+          - 'src/handlers/subject.*'
+          - 'src/constants.*'
+          - 'src/dynamodb/*'
+          - 'src/helpers/**/*'
+      events:
+        - http:
+            path: /subject
+            method: get
+            cors: true
+  submitHomework:
+      name: ${self:custom.base}-submitHomework
+      description: 'submitHomework function'
+      handler: src/handlers/submitHomework.handler
+      timeout: 30
+      memorySize: 264
+      package:
+        patterns:
+          - '!src/**'
+          - 'src/handlers/submitHomework.*'
+          - 'src/constants.*'
+          - 'src/dynamodb/*'
+          - 'src/helpers/**/*'
+      events:
+        - http:
+            path: /submitHomework
             method: post
             cors: true

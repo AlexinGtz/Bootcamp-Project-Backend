@@ -22,6 +22,11 @@ export class CustomDynamoDB {
         this.primaryKey = primaryKey;
         this.DB = new DynamoDBClient({
             endpoint: process.env.STAGE === 'local' ? "http://localhost:4000" : undefined,
+            region: "us-east-2",
+            credentials: process.env.STAGE === 'local' ? {
+                accessKeyId: 'XXXXXXXXXXXXXXX',
+                secretAccessKey: 'XXXXXXXXXXXXXXXXXXXXXX'
+            } : undefined,
         });
         this.sortingKey = sortingKey ?? null;
     }
@@ -41,6 +46,8 @@ export class CustomDynamoDB {
             }
         })
 
+        console.log('options', options);
+
         const dbRes = await this.DB.send(options);
         if(!dbRes.Item) {
             return null;
@@ -48,9 +55,9 @@ export class CustomDynamoDB {
         return unmarshall(dbRes.Item);
     }
 
-    async query(id, secondaryKeyVal?, sortComparison?, indexName?) {
+    async query(id, secondaryKeyVal?, sortComparison?, indexName?, indexSortingKey?) {
         const pkName = `#${indexName?.split('-')[0] ?? this.primaryKey}`
-        const skName = `#${this.sortingKey}`
+        const skName = `#${indexSortingKey ?? this.sortingKey}`
 
         let condition = `${pkName} = :pk`
 
@@ -64,14 +71,14 @@ export class CustomDynamoDB {
             [pkName]: indexName?.split('-')[0] ?? this.primaryKey,
         }
 
-        if (this.sortingKey && secondaryKeyVal) {
-            expressionValues[":sk"] = {
+        if (secondaryKeyVal) {
+                expressionValues[":sk"] = {
                 S: secondaryKeyVal
             }
-            expressionNames[skName] = this.sortingKey;
+            expressionNames[skName] = indexName && indexSortingKey ? indexSortingKey : this.sortingKey;
             condition = condition.concat(` AND ${skName} ${sortComparison} :sk`);
         }
-
+        
         const options = new QueryCommand({
             TableName: this.tableName,
             IndexName: indexName ?? undefined,

@@ -15,3 +15,82 @@ Resources:
             Value: ${self:provider.stage}
           - Key: Service
             Value: ${self:service}
+  homeworksTable:
+      Type: AWS::DynamoDB::Table
+      Properties: 
+        TableName: ${self:provider.stage}-${self:service}-homeworks
+        BillingMode: PAY_PER_REQUEST
+        AttributeDefinitions:
+          - AttributeName: "id"
+            AttributeType: "S"
+          - AttributeName: "subjectId"
+            AttributeType: "S"
+        KeySchema: 
+          - AttributeName: "id"
+            KeyType: "HASH"
+        GlobalSecondaryIndexes:
+          - IndexName: "subjectId-Index"
+            KeySchema: 
+              - AttributeName: "subjectId"
+                KeyType: "HASH"
+            Projection: 
+              ProjectionType: ALL
+        Tags:
+          - Key: Stage
+            Value: ${self:provider.stage}
+          - Key: Service
+            Value: ${self:service}
+  homeworkSubmissionsTable:
+      Type: AWS::DynamoDB::Table
+      Properties: 
+        TableName: ${self:provider.stage}-${self:service}-homeworkSubmissions
+        BillingMode: PAY_PER_REQUEST
+        AttributeDefinitions:
+          - AttributeName: "id"
+            AttributeType: "S"
+          - AttributeName: "homeworkId"
+            AttributeType: "S"
+          - AttributeName: "studentEmail"
+            AttributeType: "S"
+        KeySchema: 
+          - AttributeName: "id"
+            KeyType: "HASH"
+        GlobalSecondaryIndexes:
+          - IndexName: "homeworkId-Index"
+            KeySchema: 
+              - AttributeName: "homeworkId"
+                KeyType: "HASH"
+              - AttributeName: "studentEmail"
+                KeyType: "RANGE"
+            Projection: 
+              ProjectionType: ALL
+        Tags:
+          - Key: Stage
+            Value: ${self:provider.stage}
+          - Key: Service
+            Value: ${self:service}
+  subjectsTable:
+      Type: AWS::DynamoDB::Table
+      Properties: 
+        TableName: ${self:provider.stage}-${self:service}-subjects
+        BillingMode: PAY_PER_REQUEST
+        AttributeDefinitions:
+          - AttributeName: "id"
+            AttributeType: "S"
+          - AttributeName: "teacherEmail"
+            AttributeType: "S"
+        KeySchema: 
+          - AttributeName: "id"
+            KeyType: "HASH"
+        GlobalSecondaryIndexes:
+          - IndexName: "teacherEmail-Index"
+            KeySchema: 
+              - AttributeName: "teacherEmail"
+                KeyType: "HASH"
+            Projection: 
+              ProjectionType: ALL
+        Tags:
+          - Key: Stage
+            Value: ${self:provider.stage}
+          - Key: Service
+            Value: ${self:service}

@@ -1,11 +1,21 @@
 [
     {
         "email": "luiginini@gmail.com",
-        "password": "Tutti",
+        "password": "Luigi",
         "firstName": "Luis",
         "lastName": "Urias",
         "age": 38, 
-        "subjects": [],
+        "subjects": ["S1", "S2", "S3", "S4"],
+        "userType": "STUDENT"
+       
+    },
+    {
+        "email": "tutti@gmail.com",
+        "password": "Tutti",
+        "firstName": "Tutti",
+        "lastName": "Da Capo",
+        "age": 8, 
+        "subjects": ["S1", "S2", "S3", "S4"],
         "userType": "STUDENT"
        
     },
@@ -15,6 +25,24 @@
         "firstName": "Pedro",
         "lastName": "Páramo",
         "age": 40,
+        "subjects": ["S1", "S3"],
+        "userType": "TEACHER"
+    },
+    {
+        "email": "chipi@chapa.com",
+        "password": "dubidubi",
+        "firstName": "Chipi",
+        "lastName": "Chapa",
+        "age": 25,
+        "subjects": ["S2","S4"],
+        "userType": "TEACHER"
+    },
+    {
+        "email": "ludwig@van.com",
+        "password": "presto",
+        "firstName": "Ludwig",
+        "lastName": "van Beethoven",
+        "age": 100,
         "subjects": [],
         "userType": "TEACHER"
     }
