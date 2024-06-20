@@ -100,6 +100,21 @@ describe("Add Homework handler", () => {
             expect(response.statusCode).toEqual(400);      
         })
 
+        it("Should fail when the homework name is not of type string", async () => {
+            const response = await handler({
+                headers: {
+                    Authorization: "teacherToken"
+                },
+                body: JSON.stringify({
+                    name: 123
+                })
+            })
+            
+            const body = JSON.parse(response.body)
+            expect(body.message).toEqual("Homework name is not of type string");
+            expect(response.statusCode).toEqual(400);      
+        })
+
         it("Should fail when the homework description is not given", async () => {
             const response = await handler({
                 headers: {
@@ -113,6 +128,22 @@ describe("Add Homework handler", () => {
             
             const body = JSON.parse(response.body)
             expect(body.message).toEqual("Homework description not provided");
+            expect(response.statusCode).toEqual(400);      
+        })
+        
+        it("Should fail when the homework description is not of type string", async () => {
+            const response = await handler({
+                headers: {
+                    Authorization: "teacherToken"
+                },
+                body: JSON.stringify({
+                    name: "Activity 101",
+                    description: 123
+                })
+            })
+            
+            const body = JSON.parse(response.body)
+            expect(body.message).toEqual("Homework description is not of type string");
             expect(response.statusCode).toEqual(400);      
         })
 
@@ -168,6 +199,23 @@ describe("Add Homework handler", () => {
             expect(response.statusCode).toEqual(400);      
         })
 
+        it("Should fail when the subject ID is not of type string", async () => {
+            const response = await handler({
+                headers: {
+                    Authorization: "teacherToken"
+                },
+                body: JSON.stringify({
+                    name: "Activity 101",
+                    description: "Do something",
+                    dueDate: "12-12-2024",
+                    subjectId: 123
+                })
+            })
+            
+            const body = JSON.parse(response.body)
+            expect(body.message).toEqual("Subject ID is not of type string");
+            expect(response.statusCode).toEqual(400);      
+        })
 
         it("Should fail when the user is not found", async () => {
             const response = await handler({

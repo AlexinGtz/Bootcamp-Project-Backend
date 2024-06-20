@@ -33,8 +33,16 @@ export const handler = async(event: any) => {
         return responseHelper(400, 'Homework name not provided')
     }
 
+    if((typeof name) !== 'string') {
+        return responseHelper(400, 'Homework name is not of type string')
+    }
+
     if(!description || description.toString().trim() === '') {
         return responseHelper(400, 'Homework description not provided')
+    }
+
+    if((typeof description) !== 'string') {
+        return responseHelper(400, 'Homework description is not of type string')
     }
 
     if(!dueDate || dueDate.toString().trim() === '') {
@@ -50,10 +58,14 @@ export const handler = async(event: any) => {
     if(!subjectId || subjectId.toString().trim() === '') {
         return responseHelper(400, 'Subject ID not provided')
     }
+
+    if((typeof subjectId) !== 'string') {
+        return responseHelper(400, 'Subject ID is not of type string')
+    }
     
     const [user, subject, subjectHomeworks] = await Promise.all([
         userDB.getItem(tokenData.userEmail),
-        subjectDB.getItem(subjectId.toString()),
+        subjectDB.getItem(subjectId),
         subjectHomeworkDB.query(subjectId.toString(), null, null, "subjectId-Index"),
     ])
 
@@ -65,11 +77,11 @@ export const handler = async(event: any) => {
         return responseHelper(400, 'Subject not found')
     }
 
-    if(!user.subjects.includes(subjectId.toString())) {
+    if(!user.subjects.includes(subjectId)) {
         return responseHelper(400, 'The subject does not belong to the teacher')
     }
 
-    if(subjectHomeworks.find((homework: any) => homework.name === name.toString().trim())) {
+    if(subjectHomeworks.find((homework: any) => homework.name === name.trim())) {
         return responseHelper(400, 'Already exists a homework with the same name for this subject')
     }
 
@@ -77,9 +89,9 @@ export const handler = async(event: any) => {
         await subjectHomeworkDB.putItem({
             id: uuidv4(),
             subjectId: subjectId,
-            name: name.toString().trim(),
+            name: name.trim(),
             dueDate: validDueDate.toISOString(),
-            description: description.toString()
+            description: description
         });
     } catch(error) {
         return responseHelper(500, `Failed to add the homework - ${error.message}`)
