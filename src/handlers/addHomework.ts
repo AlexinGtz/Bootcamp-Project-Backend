@@ -50,11 +50,15 @@ export const handler = async(event: any) => {
     }
     
     const validDueDate = new Date(dueDate)
-
+   
     if(validDueDate.toString() === "Invalid Date" || (typeof dueDate) === 'number') {
         return responseHelper(400, 'Homework due date is not a valid date')
     }
 
+    if(validDueDate < new Date()) {
+        return responseHelper(400, 'Homework due date is a date in the past')
+    }
+    
     if(!subjectId || subjectId.toString().trim() === '') {
         return responseHelper(400, 'Subject ID not provided')
     }

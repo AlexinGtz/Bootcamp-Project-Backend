@@ -181,6 +181,23 @@ describe("Add Homework handler", () => {
             expect(response.statusCode).toEqual(400);      
         })
 
+        it("Should fail when the homework due date is a date in the past", async () => {
+            const response = await handler({
+                headers: {
+                    Authorization: "teacherToken"
+                },
+                body: JSON.stringify({
+                    name: "Activity 101",
+                    description: "Do something",
+                    dueDate: "01/01/2024"
+                })
+            })
+            
+            const body = JSON.parse(response.body)
+            expect(body.message).toEqual("Homework due date is a date in the past");
+            expect(response.statusCode).toEqual(400);      
+        })
+
         it("Should fail when the subject ID is not given", async () => {
             const response = await handler({
                 headers: {
