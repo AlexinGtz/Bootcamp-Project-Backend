@@ -29,32 +29,32 @@ export const handler = async(event: any) => {
         subjectId
     } = body;
     
-    if(!name || name.trim() === '') {
+    if(!name || name.toString().trim() === '') {
         return responseHelper(400, 'Homework name not provided')
     }
 
-    if(!description || description.trim() === '') {
+    if(!description || description.toString().trim() === '') {
         return responseHelper(400, 'Homework description not provided')
     }
 
-    if(!dueDate || dueDate.trim() === '') {
+    if(!dueDate || dueDate.toString().trim() === '') {
         return responseHelper(400, 'Homework due date not provided')
     }
     
     const validDueDate = new Date(dueDate)
 
-    if(validDueDate.toString() === "Invalid Date") {
+    if(validDueDate.toString() === "Invalid Date" || (typeof dueDate) === 'number') {
         return responseHelper(400, 'Homework due date is not a valid date')
     }
 
-    if(!subjectId || subjectId.trim() === '') {
+    if(!subjectId || subjectId.toString().trim() === '') {
         return responseHelper(400, 'Subject ID not provided')
     }
     
     const [user, subject, subjectHomeworks] = await Promise.all([
         userDB.getItem(tokenData.userEmail),
-        subjectDB.getItem(subjectId),
-        subjectHomeworkDB.query(subjectId, null, null, "subjectId-Index"),
+        subjectDB.getItem(subjectId.toString()),
+        subjectHomeworkDB.query(subjectId.toString(), null, null, "subjectId-Index"),
     ])
 
     if(!user) {
@@ -65,11 +65,11 @@ export const handler = async(event: any) => {
         return responseHelper(400, 'Subject not found')
     }
 
-    if(!user.subjects.includes(subjectId)) {
+    if(!user.subjects.includes(subjectId.toString())) {
         return responseHelper(400, 'The subject does not belong to the teacher')
     }
 
-    if(subjectHomeworks.find((homework: any) => homework.name === name.trim())) {
+    if(subjectHomeworks.find((homework: any) => homework.name === name.toString().trim())) {
         return responseHelper(400, 'Already exists a homework with the same name for this subject')
     }
 
@@ -77,9 +77,9 @@ export const handler = async(event: any) => {
         await subjectHomeworkDB.putItem({
             id: uuidv4(),
             subjectId: subjectId,
-            name: name.trim(),
-            dueDate: validDueDate,
-            description: description
+            name: name.toString().trim(),
+            dueDate: validDueDate.toISOString(),
+            description: description.toString()
         });
     } catch(error) {
         return responseHelper(500, `Failed to add the homework - ${error.message}`)
