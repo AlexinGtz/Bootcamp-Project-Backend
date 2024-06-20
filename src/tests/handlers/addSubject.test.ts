@@ -112,6 +112,21 @@ describe("Add Subject handler", () => {
             expect(response.statusCode).toEqual(400);      
         })
 
+        it("Should fail when the subject name is not of type string", async () => {
+            const response = await handler({
+                headers: {
+                    Authorization: "validTeacher"
+                },
+                body: JSON.stringify({
+                    subjectName: 123
+                })
+            })
+            
+            const body = JSON.parse(response.body)
+            expect(body.message).toEqual("Subject name is not of type string");
+            expect(response.statusCode).toEqual(400);      
+        })
+
         it("Should fail when the subject description is not given", async () => {
             const response = await handler({
                 headers: {
@@ -125,6 +140,22 @@ describe("Add Subject handler", () => {
             
             const body = JSON.parse(response.body)
             expect(body.message).toEqual("Subject description not provided");
+            expect(response.statusCode).toEqual(400);      
+        })
+
+        it("Should fail when the subject description is not type of string", async () => {
+            const response = await handler({
+                headers: {
+                    Authorization: "validTeacher"
+                },
+                body: JSON.stringify({
+                    subjectName: "Physics",
+                    subjectDescription: 123
+                })
+            })
+            
+            const body = JSON.parse(response.body)
+            expect(body.message).toEqual("Subject description is not of type string");
             expect(response.statusCode).toEqual(400);      
         })
 

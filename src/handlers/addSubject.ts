@@ -29,8 +29,16 @@ export const handler = async(event: any) => {
             return responseHelper(400, 'Subject name not provided')
     }
 
+    if(typeof(subjectName) !== 'string') {
+        return responseHelper(400, 'Subject name is not of type string')
+    }
+
     if(!subjectDescription || subjectDescription.toString().trim() === '') {
         return responseHelper(400, 'Subject description not provided')
+    }
+    
+    if(typeof(subjectDescription) !== 'string') {
+        return responseHelper(400, 'Subject description is not of type string')
     }
 
     const [user, teacherSubjects] = await Promise.all([
@@ -52,8 +60,8 @@ export const handler = async(event: any) => {
         await subjectDB.putItem({
             id: subjectId,
             teacherEmail: tokenData.userEmail,
-            name: subjectName.toString(),
-            description: subjectDescription.toString(),
+            name: subjectName,
+            description: subjectDescription,
             students:[]
         });
     } catch(error) {
