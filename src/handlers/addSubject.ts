@@ -25,11 +25,11 @@ export const handler = async(event: any) => {
         subjectDescription
     } = body;
     
-    if(!subjectName || subjectName.trim() === '') {
+    if(!subjectName || subjectName.toString().trim() === '') {
             return responseHelper(400, 'Subject name not provided')
     }
 
-    if(!subjectDescription || subjectDescription.trim() === '') {
+    if(!subjectDescription || subjectDescription.toString().trim() === '') {
         return responseHelper(400, 'Subject description not provided')
     }
 
@@ -52,8 +52,8 @@ export const handler = async(event: any) => {
         await subjectDB.putItem({
             id: subjectId,
             teacherEmail: tokenData.userEmail,
-            name: subjectName,
-            description: subjectDescription,
+            name: subjectName.toString(),
+            description: subjectDescription.toString(),
             students:[]
         });
     } catch(error) {
