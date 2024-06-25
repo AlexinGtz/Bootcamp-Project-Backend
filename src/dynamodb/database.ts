@@ -46,7 +46,7 @@ export class CustomDynamoDB {
             }
         })
 
-        console.log('options', options);
+        console.log('options', options.input);
 
         const dbRes = await this.DB.send(options);
         if(!dbRes.Item) {

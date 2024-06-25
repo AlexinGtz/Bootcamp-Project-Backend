@@ -24,7 +24,7 @@ export const handler = async(event: any) => {
         return subjectsDB.getItem(subjectId)
     })
     const homeworkSubmissionPromises = user.subjects.map((subjectId) => {
-        return homeworkSubmissionDB.query(subjectId, user.email, "=", "subjectId-Index","studentEmail")
+        return homeworkSubmissionDB.query(subjectId, null, null , "subjectId-Index")
         })
     const subjectsArray = await Promise.all(subjectPromises);
     const homeworkSubmissionArray = await Promise.all(homeworkSubmissionPromises);
