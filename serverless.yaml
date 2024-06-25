@@ -189,3 +189,75 @@ functions:
             path: /submitHomework
             method: post
             cors: true
+  homeworkSubmission:
+      name: ${self:custom.base}-homeworkSubmission
+      description: 'homeworkSubmission function'
+      handler: src/handlers/homeworkSubmission.handler
+      timeout: 30
+      memorySize: 264
+      package:
+        patterns:
+          - '!src/**'
+          - 'src/handlers/homeworkSubmission.*'
+          - 'src/constants.*'
+          - 'src/dynamodb/*'
+          - 'src/helpers/**/*'
+      events:
+        - http:
+            path: /homeworkSubmission/{subjectId?}
+            method: get
+            cors: true
+  teacherHomework:
+      name: ${self:custom.base}-teacherHomework
+      description: 'teacherHomework function'
+      handler: src/handlers/teacherHomework.handler
+      timeout: 30
+      memorySize: 264
+      package:
+        patterns:
+          - '!src/**'
+          - 'src/handlers/teacherHomework.*'
+          - 'src/constants.*'
+          - 'src/dynamodb/*'
+          - 'src/helpers/**/*'
+      events:
+        - http:
+            path: /teacherHomework/{homeworkId?}
+            method: get
+            cors: true
+  addSubject:
+      name: ${self:custom.base}-addSubject
+      description: 'addSubject function'
+      handler: src/handlers/addSubject.handler
+      timeout: 30
+      memorySize: 264
+      package:
+        patterns:
+          - '!src/**'
+          - 'src/handlers/addSubject.*'
+          - 'src/constants.*'
+          - 'src/dynamodb/*'
+          - 'src/helpers/**/*'
+      events:
+        - http:
+            path: /addSubject
+            method: post
+            cors: true
+  addHomework:
+      name: ${self:custom.base}-addHomework
+      description: 'addHomework function'
+      handler: src/handlers/addHomework.handler
+      timeout: 30
+      memorySize: 264
+      package:
+        patterns:
+          - '!src/**'
+          - 'src/handlers/addHomework.*'
+          - 'src/constants.*'
+          - 'src/dynamodb/*'
+          - 'src/helpers/**/*'
+      events:
+        - http:
+            path: /addHomework
+            method: post
+            cors: true
