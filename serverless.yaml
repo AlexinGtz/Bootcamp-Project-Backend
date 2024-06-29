@@ -171,6 +171,24 @@ functions:
             path: /subject
             method: get
             cors: true
+  subjects:
+      name: ${self:custom.base}-subjects
+      description: 'subjects function'
+      handler: src/handlers/subjects.handler
+      timeout: 30
+      memorySize: 264
+      package:
+        patterns:
+          - '!src/**'
+          - 'src/handlers/subjects.*'
+          - 'src/constants.*'
+          - 'src/dynamodb/*'
+          - 'src/helpers/**/*'
+      events:
+        - http:
+            path: /subjects
+            method: get
+            cors: true
   submitHomework:
       name: ${self:custom.base}-submitHomework
       description: 'submitHomework function'
