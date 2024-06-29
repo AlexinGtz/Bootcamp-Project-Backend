@@ -29,25 +29,22 @@ export const handler = async(event: any) => {
         })
     const subjectsArray = await Promise.all(subjectPromises);
     const homeworkSubmissionArray = (await Promise.all(homeworkSubmissionPromises)).flat();
-    console.log('1')
 
     if( !user ){
         return responseHelper(HTTP_CODES.FORBIDDEN, "No data found.")
     }
-    console.log('2')
     const subjectInfoResponse = subjectsArray.map((subject) => {
         const filteredSubmissions = homeworkSubmissionArray.filter((hmwksubmission) => {
             return subject.id === hmwksubmission.subjectId && hmwksubmission.studentEmail === user.email
         })
-    console.log('3')
         return {
-            id: subjectInfoResponse.id,
-            teacherEmail: subjectInfoResponse.teacherEmail,
-            name: subjectInfoResponse.name,
-            description: subjectInfoResponse.description,
+            id: subject.id,
+            teacherEmail: subject.teacherEmail,
+            name: subject.name,
+            description: subject.description,
             grade: calculateAvgGrade(filteredSubmissions)
         }
     })
-    console.log('4')
+
     return responseHelper(HTTP_CODES.SUCCESS, "Success.", subjectInfoResponse)
 }
