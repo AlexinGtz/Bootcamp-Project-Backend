@@ -41,7 +41,7 @@ export const handler = async (event: any) => {
         homeworks.map(async (item: any) => {
             const homeworkSubmission = await homeworkSubmissionDB.query(item.id, tokenData.userEmail, "=","homeworkId-Index", "studentEmail");
             
-            const pendingSubmission = !homeworkSubmission || homeworkSubmission.length === 0 ? true : false;
+            const pendingSubmission = !homeworkSubmission || homeworkSubmission.length === 0;
 
             return {
                 name: item.name,
