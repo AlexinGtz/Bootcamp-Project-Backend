@@ -4,7 +4,7 @@
     "homeworkId": "1",
     "studentEmail": "luiginini@gmail.com",
     "subjectId": "S1",
-    "grade": 10,
+    "grade": null,
     "submissionText": "Here is Luiginini's homework 1 submission",
     "submissionDate": "2023-12-12T05:04:03.930Z"
   },
@@ -13,7 +13,7 @@
     "homeworkId": "2",
     "studentEmail": "luiginini@gmail.com",
     "subjectId": "S2",
-    "grade": null,
+    "grade": 7,
     "submissionText": "Here is Luiginini's homework 2 submission",
     "submissionDate": "2023-10-12T11:40:33.920Z"
   },
@@ -31,8 +31,17 @@
     "homeworkId": "3",
     "studentEmail": "tutti@gmail.com",
     "subjectId": "S2",
-    "grade": 7,
+    "grade": null,
     "submissionText": "Here is Tutti's homework 3 submission",
     "submissionDate": "2024-01-01T01:20:33.900Z"
+  },
+  {
+    "id": "15",
+    "homeworkId": "10",
+    "studentEmail": "luiginini@gmail.com",
+    "subjectId": "S2",
+    "grade": 9,
+    "submissionText": "Here is Luiginini's homework 2 submission",
+    "submissionDate": "2023-10-12T11:40:33.920Z"
   }
 ]
