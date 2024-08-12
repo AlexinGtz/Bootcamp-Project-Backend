@@ -44,10 +44,13 @@ export const handler = async (event: any) => {
             const pendingSubmission = !homeworkSubmission || homeworkSubmission.length === 0;
 
             return {
+                homeworkId: item.id,
                 name: item.name,
                 grade: pendingSubmission ? null : homeworkSubmission[0].grade,
                 description: item.description,
-                pending: pendingSubmission
+                pending: pendingSubmission,
+                submittedDate: pendingSubmission ? null : homeworkSubmission[0].submissionDate,
+                dueDate: pendingSubmission ? item.dueDate : null
             };
         })
     );
